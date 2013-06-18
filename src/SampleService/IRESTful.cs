@@ -12,9 +12,9 @@ namespace SampleService
     [ServiceContract]
     public interface IRESTful
     {
-
         [OperationContract]
-        string GetData(int value);
+        [WebGet(UriTemplate = "GetData/{value}")]
+        string GetData(string value);
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);
