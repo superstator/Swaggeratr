@@ -7,10 +7,13 @@ using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Activation;
+using System.ServiceModel.Configuration;
+using System.ServiceModel.Description;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;
@@ -94,21 +97,52 @@ namespace Swaggerator
 			return methods;
 		}
 
-		public static IEnumerable<string> FindServices()
+		public static IEnumerable<MappedService> FindServices()
 		{
-			return from h in GetRouteServiceTable().Keys.OfType<string>()
-					 select h.Substring(2);
+			foreach (var x in FindStandardServiceEndpoints()) { yield return x; }
+			foreach (var x in FindRoutedServiceEndpoints()) { yield return x; }
 		}
 
-		public static Type FindServiceType(string serviceName)
+		//public static IEnumerable<string> FindServices()
+		//{
+		//	return from h in GetRouteServiceTable().Keys.OfType<string>()
+		//			 select h.Substring(2);
+		//}
+
+		//find standard configured endpoints
+		public static IEnumerable<MappedService> FindStandardServiceEndpoints()
+		{
+			ServiceModelSectionGroup config = ServiceModelSectionGroup.GetSectionGroup(System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath));
+			ServiceHost host = OperationContext.Current.Host as ServiceHost;
+			foreach (ServiceElement svc in config.Services.Services)
+			{
+				foreach (ServiceEndpointElement ep in svc.Endpoints)
+				{
+					yield return new MappedService()
+					{
+						Implementation = Type.GetType(svc.Name),
+						Path = "/" + ep.Address.OriginalString
+					};
+				}
+			}
+		}
+
+		//find any endpoints that are routed via RouteServiceTable
+		public static IEnumerable<MappedService> FindRoutedServiceEndpoints()
 		{
 			Hashtable ht = GetRouteServiceTable();
-
-			Type t = ht["~/" + serviceName].GetType();
-			PropertyInfo p = t.GetProperty("ServiceType");
-			string serviceTypeName = p.GetValue(ht["~/" + serviceName]) as string;
-			Type serviceType = Type.GetType(serviceTypeName);
-			return serviceType;
+			foreach (var x in ht.Values)
+			{
+				Type t = x.GetType();
+				PropertyInfo typeProp = t.GetProperty("ServiceType");
+				PropertyInfo pathProp = t.GetProperty("VirtualPath");
+				string path = pathProp.GetValue(x) as string;
+				yield return new MappedService()
+				{
+					Implementation = Type.GetType(typeProp.GetValue(x) as string),
+					Path = path.Substring(path.IndexOf('/'))
+				};
+			}
 		}
 
 		private static Hashtable GetRouteServiceTable()

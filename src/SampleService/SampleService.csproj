@@ -80,7 +80,9 @@
     <Content Include="swagger-ui\dist\lib\underscore-min.js" />
     <Content Include="swagger-ui\dist\swagger-ui.js" />
     <Content Include="swagger-ui\dist\swagger-ui.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Global.asax.cs">

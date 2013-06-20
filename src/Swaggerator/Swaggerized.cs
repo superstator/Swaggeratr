@@ -41,16 +41,21 @@ namespace Swaggerator
 
 			list.basePath = HttpContext.Current.Request.Url.OriginalString + "?svc=";
 
+			ServiceHost host = OperationContext.Current.Host as ServiceHost;
+
 			string filePath = HttpContext.Current.Request.CurrentExecutionFilePath;
 
+			
 			IEnumerable<RouteBase> routes = RouteTable.Routes;
-			foreach (string s in SwaggerMappers.FindServices())
-			{
-				Service res = new Service();
-				res.path = s;
+			List<MappedService> services = SwaggerMappers.FindServices().ToList();
 
-				list.apis.Add(res);
-			}
+			//foreach (string s in SwaggerMappers.FindServices())
+			//{
+			//	Service res = new Service();
+			//	res.path = s;
+
+			//	list.apis.Add(res);
+			//}
 
 			return list;
 		}
@@ -70,10 +75,10 @@ namespace Swaggerator
 			api.basePath = string.Format("{0}://{1}/{2}", HttpContext.Current.Request.Url.Scheme, HttpContext.Current.Request.Url.Authority, serviceName);
 			api.resourcePath = serviceName;
 
-			Type serviceType = SwaggerMappers.FindServiceType(serviceName);
+			//Type serviceType = SwaggerMappers.FindServiceType(serviceName);
 
 
-			api.apis.AddRange(maps.FindMethods(serviceType));
+			//api.apis.AddRange(maps.FindMethods(serviceType));
 
 			//api.models.AddRange(FindModels(serviceType));
 
