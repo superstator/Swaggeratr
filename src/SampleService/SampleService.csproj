@@ -62,6 +62,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="RESTful.svc" />
+    <Content Include="SecondaryService.svc" />
     <Content Include="swagger-ui\dist\css\hightlight.default.css" />
     <Content Include="swagger-ui\dist\css\screen.css" />
     <Content Include="swagger-ui\dist\images\logo_small.png" />
@@ -88,11 +89,15 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ISecondaryService.cs" />
     <Compile Include="RESTful.svc.cs">
       <DependentUpon>RESTful.svc</DependentUpon>
     </Compile>
     <Compile Include="IRESTful.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecondaryService.svc.cs">
+      <DependentUpon>SecondaryService.svc</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -124,7 +129,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>13912</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:12928/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
