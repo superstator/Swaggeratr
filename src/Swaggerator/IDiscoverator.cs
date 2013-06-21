@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Swaggerator
 {
@@ -15,5 +16,9 @@ namespace Swaggerator
         [OperationContract]
         [WebGet(UriTemplate = "api-docs.json", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
         ServiceList GetServices();
+
+		  [OperationContract]
+		  [WebGet(UriTemplate = "api-docs.json/{*service}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+		  Stream GetServiceDetails(string service);
     }
 }

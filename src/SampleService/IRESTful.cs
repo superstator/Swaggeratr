@@ -10,14 +10,15 @@ namespace SampleService
 {
 	// NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
 	[ServiceContract]
-	public interface IRESTful : Swaggerator.ISwaggerized
+	public interface IRESTful
 	{
 		[OperationContract]
-		[WebGet(UriTemplate = "GetData/{value}")]
+		[WebGet(UriTemplate = "/GetData/{value}")]
 		string GetData(string value);
 
 		[OperationContract]
-		[WebInvoke(Method = "POST")]
+		[WebInvoke(UriTemplate = "/data", Method = "POST", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+		//CompositeType GetDataUsingDataContract(string composite);
 		CompositeType GetDataUsingDataContract(CompositeType composite);
 
 		// TODO: Add your service operations here

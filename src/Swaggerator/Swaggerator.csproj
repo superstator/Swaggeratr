@@ -57,7 +57,6 @@
     <Compile Include="Discoverator.cs" />
     <Compile Include="IDiscoverator.cs" />
     <Compile Include="MappedService.cs" />
-    <Compile Include="Swaggerized.cs" />
     <Compile Include="Models\Api.cs" />
     <Compile Include="Models\Method.cs" />
     <Compile Include="Models\Model.cs" />

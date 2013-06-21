@@ -96,70 +96,7 @@ namespace Swaggerator
 
 			return methods;
 		}
-
-		public static IEnumerable<MappedService> FindServices()
-		{
-			foreach (var x in FindStandardServiceEndpoints()) { yield return x; }
-			foreach (var x in FindRoutedServiceEndpoints()) { yield return x; }
-		}
-
-		//public static IEnumerable<string> FindServices()
-		//{
-		//	return from h in GetRouteServiceTable().Keys.OfType<string>()
-		//			 select h.Substring(2);
-		//}
-
-		//find standard configured endpoints
-		public static IEnumerable<MappedService> FindStandardServiceEndpoints()
-		{
-			ServiceModelSectionGroup config = ServiceModelSectionGroup.GetSectionGroup(System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(HttpContext.Current.Request.ApplicationPath));
-			ServiceHost host = OperationContext.Current.Host as ServiceHost;
-			foreach (ServiceElement svc in config.Services.Services)
-			{
-				foreach (ServiceEndpointElement ep in svc.Endpoints)
-				{
-					yield return new MappedService()
-					{
-						Implementation = Type.GetType(svc.Name),
-						Path = "/" + ep.Address.OriginalString
-					};
-				}
-			}
-		}
-
-		//find any endpoints that are routed via RouteServiceTable
-		public static IEnumerable<MappedService> FindRoutedServiceEndpoints()
-		{
-			Hashtable ht = GetRouteServiceTable();
-			foreach (var x in ht.Values)
-			{
-				Type t = x.GetType();
-				PropertyInfo typeProp = t.GetProperty("ServiceType");
-				PropertyInfo pathProp = t.GetProperty("VirtualPath");
-				string path = pathProp.GetValue(x) as string;
-				yield return new MappedService()
-				{
-					Implementation = Type.GetType(typeProp.GetValue(x) as string),
-					Path = path.Substring(path.IndexOf('/'))
-				};
-			}
-		}
-
-		private static Hashtable GetRouteServiceTable()
-		{
-			if (RouteTable.Routes.Count > 0)
-			{
-				//take the first ServiceRoute in the RouteTable
-				ServiceRoute rd = RouteTable.Routes[0] as ServiceRoute;
-				//get the underlying ServiceRouteHandler type, which is normally unavailable, then get the private static fields of that type
-				Type t = rd.RouteHandler.GetType();
-				FieldInfo[] fields = t.GetFields(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-				//get the routeServiceTable - this is the only private static field on ServiceRouteHandler
-				return fields[0].GetValue(rd) as Hashtable;
-			}
-			else { return new Hashtable(); }
-		}
-
+		
 		private Tuple<string, Operation> FindWebMethod(MethodInfo m)
 		{
 			WebGetAttribute wg = m.GetCustomAttribute<WebGetAttribute>();
