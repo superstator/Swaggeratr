@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Swaggerator.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -26,7 +27,8 @@ namespace SampleService
 
 
 	// Use a data contract as illustrated in the sample below to add composite types to service operations.
-	[DataContract]
+    [Hidden]
+    [DataContract]
 	public class CompositeType
 	{
 		bool boolValue = true;

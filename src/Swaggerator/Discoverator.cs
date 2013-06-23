@@ -48,7 +48,7 @@ namespace Swaggerator
 		{
 			foreach (TypeInfo ti in assembly.DefinedTypes)
 			{
-				DiscoveratedAttribute da = ti.GetCustomAttribute<DiscoveratedAttribute>();
+				SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
 				if (da != null)
 				{
 					DescriptionAttribute descAttr = ti.GetCustomAttribute<DescriptionAttribute>();
@@ -68,7 +68,7 @@ namespace Swaggerator
 			{
 				foreach (TypeInfo ti in assembly.DefinedTypes)
 				{
-					DiscoveratedAttribute da = ti.GetCustomAttribute<DiscoveratedAttribute>();
+					SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
 					if (da != null && da.LocalPath == servicePath)
 					{
 						return ti.AsType();

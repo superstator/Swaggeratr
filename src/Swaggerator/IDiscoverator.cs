@@ -17,8 +17,8 @@ namespace Swaggerator
         [WebGet(UriTemplate = "api-docs.json", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
         ServiceList GetServices();
 
-		  [OperationContract]
-		  [WebGet(UriTemplate = "api-docs.json/{*service}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
-		  Stream GetServiceDetails(string service);
+        [OperationContract]
+        [WebGet(UriTemplate = "api-docs.json/{*service}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+        Stream GetServiceDetails(string service);
     }
 }

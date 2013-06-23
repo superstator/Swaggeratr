@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Swaggerator.Attributes
 {
-    public class DiscoveratedAttribute : Attribute
+    public class SwaggeratedAttribute : Attribute
     {
         /// <summary>
         /// Make this service "discoverable" by Swagger. Optional Description overrides DataAnnotations
         /// </summary>
-        public DiscoveratedAttribute(string localPath = "", string description = null)
+        public SwaggeratedAttribute(string localPath = "", string description = null)
         {
             LocalPath = localPath;
             Description = description;

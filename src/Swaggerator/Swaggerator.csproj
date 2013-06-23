@@ -53,7 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\DiscoveratedAttribute.cs" />
+    <Compile Include="Attributes\HiddenAttribute.cs" />
+    <Compile Include="Attributes\SwaggeratedAttribute.cs" />
     <Compile Include="Discoverator.cs" />
     <Compile Include="IDiscoverator.cs" />
     <Compile Include="MappedService.cs" />
