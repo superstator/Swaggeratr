@@ -45,5 +45,11 @@ namespace SampleService
 				StringValue = "foobar"
 			};
 		}
+
+
+		public string PutData(string value, string anothervalue)
+		{
+			return value + anothervalue;
+		}
 	}
 }
