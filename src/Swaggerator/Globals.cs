@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Swaggerator
 {
-	internal class MappedService
-	{
-		public string Path { get; set; }
-		public Type Implementation { get; set; }
-	}
+    // Constants only!
+    internal static class Globals
+    {
+        public const string SWAGGER_VERSION = "1.1";
+    }
 }

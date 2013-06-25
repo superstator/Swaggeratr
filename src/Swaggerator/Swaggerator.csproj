@@ -56,17 +56,17 @@
     <Compile Include="Attributes\HiddenAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
     <Compile Include="Discoverator.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="IDiscoverator.cs" />
-    <Compile Include="MappedService.cs" />
-    <Compile Include="Models\Api.cs" />
     <Compile Include="Models\Method.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Operation.cs" />
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\ServiceList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SwaggerMappers.cs" />
+    <Compile Include="Helpers.cs" />
+    <Compile Include="Mappers.cs" />
+    <Compile Include="Serializers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
