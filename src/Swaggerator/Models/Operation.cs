@@ -7,12 +7,12 @@ using System.Web;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	public class Operation
+	internal class Operation
 	{
 		public Operation()
 		{
 			parameters = new List<Parameter>();
-			errorResponses = new List<string>();
+			errorResponses = new List<ResponseCode>();
 		}
 
 		[DataMember]
@@ -28,6 +28,6 @@ namespace Swaggerator.Models
 		[DataMember]
 		public string notes { get; set; }
 		[DataMember]
-		public List<string> errorResponses { get; set; }
+		public List<ResponseCode> errorResponses { get; set; }
 	}
 }

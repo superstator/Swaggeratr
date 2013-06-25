@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.ComponentModel;
 
 namespace SampleService
 {
@@ -17,6 +18,8 @@ namespace SampleService
         [WebGet(UriTemplate = "/GetData/{value}")]
         string GetData(string value);
 
+			[OperationSummary("Does stuff.")]
+		  [ResponseCode(400,"This will be overridden by the implementation")]
         [OperationContract]
         [WebInvoke(UriTemplate = "/data", Method = "POST", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
         //CompositeType GetDataUsingDataContract(string composite);
@@ -33,6 +36,7 @@ namespace SampleService
         string stringValue = "Hello ";
 
         [DataMember]
+		 [Description("Whatever you do don't set this to")]
         public bool BoolValue
         {
             get { return boolValue; }

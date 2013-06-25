@@ -7,7 +7,7 @@ using System.Web;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	public class Parameter
+	internal class Parameter
 	{
 		//public Parameter()
 		//{

@@ -54,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\HiddenAttribute.cs" />
+    <Compile Include="Attributes\OperationSummaryAttribute.cs" />
+    <Compile Include="Attributes\ResponseCodeAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
     <Compile Include="Discoverator.cs" />
     <Compile Include="Globals.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Models\Method.cs" />
     <Compile Include="Models\Operation.cs" />
     <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\ResponseCode.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\ServiceList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -7,7 +7,7 @@ using System.Web;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	public class ServiceList
+	internal class ServiceList
 	{
 		public ServiceList()
 		{

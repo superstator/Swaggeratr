@@ -7,7 +7,7 @@ using System.Web;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	public class Method
+	internal class Method
 	{
 		public Method()
 		{

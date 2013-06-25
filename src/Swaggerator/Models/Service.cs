@@ -7,7 +7,7 @@ using System.Web;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	public class Service
+	internal class Service
 	{
 		[DataMember]
 		public string path { get; set; }

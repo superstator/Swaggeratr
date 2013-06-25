@@ -90,15 +90,25 @@ namespace Swaggerator
                     Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(declaration, "Description") ??
                     "";
 
+					string summary =
+                    Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(implementation, "Summary") ??
+                    Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
+                    "";
+
                 Operation operation = new Operation()
                 {
                     httpMethod = httpMethod,
                     nickname = declaration.Name + httpMethod,
                     responseClass = Helpers.MapSwaggerType(declaration.ReturnType, typeStack),
                     //TODO add mechanism to make this somewhat configurable
-                    summary = (description.Length > 0) ? description.Substring(0, description.IndexOf(".")) : "",
+                    summary = summary,
                     notes = description
                 };
+
+					 operation.errorResponses.AddRange(GetResponseCodes(map.TargetMethods[index]));
+					 operation.errorResponses.AddRange(from r in GetResponseCodes(map.InterfaceMethods[index])
+																  where !operation.errorResponses.Any(c => c.code.Equals(r.code))
+																  select r);
 
                 ParameterInfo[] parameters = declaration.GetParameters();
                 foreach (ParameterInfo parameter in parameters)
@@ -122,5 +132,17 @@ namespace Swaggerator
                 yield return new Tuple<string, Operation>(uriTemplate, operation);
             }
         }
+
+		  private static IEnumerable<ResponseCode> GetResponseCodes(MethodInfo methodInfo)
+		  {
+			  foreach (ResponseCodeAttribute rca in methodInfo.GetCustomAttributes<ResponseCodeAttribute>())
+			  {
+				  yield return new ResponseCode()
+				  {
+					  code = rca.Code,
+					  reason = rca.Description
+				  };
+			  }
+		  }
     }
 }
