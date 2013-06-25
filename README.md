@@ -33,6 +33,18 @@ You can add the ```[Hidden]``` attribute to classes to keep them out of the ```m
 
 Lastly, you can add the ```[Hidden]``` attribute to a specific property of a type. The rest of the type will still be returned in the ```models``` section.
 
+There are some other attributes that may come in handy as well, like ```[OperationSummary]```, or ```[ResponseCode]```. Play around with it - you probably won't break anything.
+
 ### That's it!
 
 Now get a Swagger-compliant tool, like swagger-ui, and point it at your newly swaggerized WCF service. By default, you'll point it at \<yourserver\>/api-docs.json, but if you modified the route in the first step above, make the appropriate adjustments. Happy swaggerizing!
+
+### Are there gotchas?
+
+Heck yeah! Some may be fixed in future versions, and some will be persistent thanks to WCF not being very REST-y deep down. For instance:
+
+Path & query parameters are always strings, since WCF doesn't know how to do anything else.
+The project name is kinda silly.
+Parameters are always marked as required, even if they aren't really.
+"Try it out" requests must be JSON-only, XML seems to cause errors.
+And probably many more...
