@@ -1,11 +1,5 @@
 ﻿using Swaggerator.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
 using System.ComponentModel;
 
 namespace SampleService
@@ -32,14 +26,14 @@ namespace SampleService
 			if (composite.BoolValue)
 			{
 				composite.StringValue += "Suffix";
-				composite.Secret = new SecretContainer() { SecretData = "Boo!" };
+				composite.Secret = new SecretContainer { SecretData = "Boo!" };
 			}
 			return composite;
 		}
 
 		public CompositeType GetDataUsingDataContract(string composite)
 		{
-			return new CompositeType()
+			return new CompositeType
 			{
 				BoolValue = false,
 				StringValue = "foobar"

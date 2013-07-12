@@ -1,25 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using System.ServiceModel.Activation;
-using System.ServiceModel.Configuration;
-using System.ServiceModel.Description;
 using System.ServiceModel.Web;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Routing;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Schema;
 using Swaggerator.Models;
 using Swaggerator.Attributes;
-using System.Runtime.Serialization;
 
 namespace Swaggerator
 {
@@ -29,6 +16,7 @@ namespace Swaggerator
 		/// Find methods of the supplied type which have WebGet or WebInvoke attributes.
 		/// </summary>
 		/// <param name="serviceType">The implementation type to search.</param>
+		/// <param name="typeStack">Types to be documented in the models section.</param>
 		internal static IEnumerable<Method> FindMethods(Type serviceType, Stack<Type> typeStack)
 		{
 			List<Tuple<string, Operation>> operations = new List<Tuple<string, Operation>>();
@@ -52,11 +40,11 @@ namespace Swaggerator
 			foreach (Tuple<string, Operation> t in operations)
 			{
 				Method method = (from m in methods
-								 where m.path.Equals(t.Item1)
-								 select m).FirstOrDefault();
+									  where m.path.Equals(t.Item1)
+									  select m).FirstOrDefault();
 				if (method == null)
 				{
-					method = new Method() { path = t.Item1 };
+					method = new Method { path = t.Item1 };
 					methods.Add(method);
 				}
 				method.operations.Add(t.Item2);
@@ -73,8 +61,8 @@ namespace Swaggerator
 				MethodInfo declaration = map.InterfaceMethods[index];
 
 				//if the method is marked Hidden anywhere, skip it
-				if (implementation.GetCustomAttribute<Attributes.HiddenAttribute>() != null ||
-					declaration.GetCustomAttribute<Attributes.HiddenAttribute>() != null) { continue; }
+				if (implementation.GetCustomAttribute<HiddenAttribute>() != null ||
+					declaration.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
 
 				//find the WebGet/Invoke attributes, or skip if neither is present
 				WebGetAttribute wg = declaration.GetCustomAttribute<WebGetAttribute>();
@@ -95,7 +83,7 @@ namespace Swaggerator
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
 				"";
 
-				Operation operation = new Operation()
+				Operation operation = new Operation
 				{
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
@@ -107,27 +95,22 @@ namespace Swaggerator
 
 				operation.errorResponses.AddRange(GetResponseCodes(map.TargetMethods[index]));
 				operation.errorResponses.AddRange(from r in GetResponseCodes(map.InterfaceMethods[index])
-												  where !operation.errorResponses.Any(c => c.code.Equals(r.code))
-												  select r);
+															 where !operation.errorResponses.Any(c => c.code.Equals(r.code))
+															 select r);
 
 				ParameterInfo[] parameters = declaration.GetParameters();
 				foreach (ParameterInfo parameter in parameters)
 				{
-					Parameter parm = new Parameter();
-					parm.name = parameter.Name;
-					parm.allowMultiple = false;
-					parm.required = true;
-					parm.dataType = Helpers.MapSwaggerType(parameter.ParameterType, typeStack);
+					Parameter parm = new Parameter
+					{
+						name = parameter.Name,
+						allowMultiple = false,
+						required = true,
+						dataType = Helpers.MapSwaggerType(parameter.ParameterType, typeStack)
+					};
 					if (uriTemplate.Contains("{" + parameter.Name + "}"))
 					{
-						if (uriTemplate.IndexOf("{" + parameter.Name + "}") < uriTemplate.IndexOf("?"))
-						{
-							parm.paramType = "path";
-						}
-						else
-						{
-							parm.paramType = "query";
-						}
+						parm.paramType = uriTemplate.IndexOf("{" + parameter.Name + "}") < uriTemplate.IndexOf("?") ? "path" : "query";
 					}
 					else
 					{
@@ -142,14 +125,11 @@ namespace Swaggerator
 
 		private static IEnumerable<ResponseCode> GetResponseCodes(MethodInfo methodInfo)
 		{
-			foreach (ResponseCodeAttribute rca in methodInfo.GetCustomAttributes<ResponseCodeAttribute>())
+			return methodInfo.GetCustomAttributes<ResponseCodeAttribute>().Select(rca => new ResponseCode
 			{
-				yield return new ResponseCode()
-				{
-					code = rca.Code,
-					reason = rca.Description
-				};
-			}
+				code = rca.Code,
+				reason = rca.Description
+			});
 		}
 	}
 }

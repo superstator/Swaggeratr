@@ -1,11 +1,7 @@
 ﻿using Swaggerator.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.Text;
 using System.ComponentModel;
 
 namespace SampleService
@@ -35,22 +31,22 @@ namespace SampleService
 	[DataContract]
 	public class CompositeType
 	{
-		bool boolValue = true;
-		string stringValue = "Hello ";
+		bool _BoolValue = true;
+		string _StringValue = "Hello ";
 
 		[DataMember]
 		[Description("Whatever you do don't set this to")]
 		public bool BoolValue
 		{
-			get { return boolValue; }
-			set { boolValue = value; }
+			get { return _BoolValue; }
+			set { _BoolValue = value; }
 		}
 
 		[DataMember]
 		public string StringValue
 		{
-			get { return stringValue; }
-			set { stringValue = value; }
+			get { return _StringValue; }
+			set { _StringValue = value; }
 		}
 
 		[Hidden]

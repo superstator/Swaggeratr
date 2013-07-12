@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.IO;
 using Newtonsoft.Json;
@@ -18,10 +17,12 @@ namespace Swaggerator
 	{
 		public Stream GetServices()
 		{
-			Models.ServiceList serviceList = new Models.ServiceList();
-			serviceList.basePath = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + "/api-docs.json";
-			serviceList.swaggerVersion = Globals.SWAGGER_VERSION;
-			serviceList.apiVersion = "No Swaggerized assemblies.";
+			Models.ServiceList serviceList = new Models.ServiceList
+			{
+				basePath = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + "/api-docs.json",
+				swaggerVersion = Globals.SWAGGER_VERSION,
+				apiVersion = "No Swaggerized assemblies."
+			};
 
 			Assembly[] allAssm = AppDomain.CurrentDomain.GetAssemblies();
 
@@ -29,7 +30,7 @@ namespace Swaggerator
 			foreach (Assembly assm in allAssm)
 			{
 				IEnumerable<Models.Service> services = GetDiscoveratedServices(assm);
-				if (services.Count() > 0)
+				if (services.Any())
 				{
 					if (foundAssembly) { serviceList.apiVersion = "Multiple Assemblies"; }
 					else
@@ -41,12 +42,12 @@ namespace Swaggerator
 				}
 			}
 
-			MemoryStream stream = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(JsonConvert.SerializeObject(serviceList)));
+			MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(serviceList)));
 
 			return stream;
 		}
 
-		private IEnumerable<Models.Service> GetDiscoveratedServices(Assembly assembly)
+		private static IEnumerable<Models.Service> GetDiscoveratedServices(Assembly assembly)
 		{
 			IEnumerable<TypeInfo> types;
 			try
@@ -65,15 +66,17 @@ namespace Swaggerator
 				if (da != null)
 				{
 					DescriptionAttribute descAttr = ti.GetCustomAttribute<DescriptionAttribute>();
-					Models.Service service = new Models.Service();
-					service.path = da.LocalPath;
-					service.description = (da == null) ? (descAttr == null) ? "" : descAttr.Description : da.Description;
+					Models.Service service = new Models.Service
+					{
+						path = da.LocalPath,
+						description = (descAttr == null) ? da.Description : descAttr.Description
+					};
 					yield return service;
 				}
 			}
 		}
 
-		private Type FindServiceTypeByPath(string servicePath)
+		private static Type FindServiceTypeByPath(string servicePath)
 		{
 			Assembly[] allAssm = AppDomain.CurrentDomain.GetAssemblies();
 			foreach (Assembly assembly in allAssm)
@@ -98,7 +101,7 @@ namespace Swaggerator
 
 			string api = Serializers.WriteApi(servicePath, serviceType, typeStack);
 
-			MemoryStream ms = new MemoryStream(ASCIIEncoding.UTF8.GetBytes(api));
+			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
 			return ms;
 		}
 	}
