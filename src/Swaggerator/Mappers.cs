@@ -53,6 +53,12 @@ namespace Swaggerator
 			return methods;
 		}
 
+		/// <summary>
+		/// Constructs individual operation objects based on the service implementation.
+		/// </summary>
+		/// <param name="map">Mapping of the service interface & implementation.</param>
+		/// <param name="typeStack">Complex types that will need later processing.</param>
+		/// <returns></returns>
 		private static IEnumerable<Tuple<string, Operation>> GetOperations(InterfaceMapping map, Stack<Type> typeStack)
 		{
 			for (int index = 0; index < map.InterfaceMethods.Count(); index++)
@@ -83,6 +89,7 @@ namespace Swaggerator
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
 				"";
 
+
 				Operation operation = new Operation
 				{
 					httpMethod = httpMethod,
@@ -98,6 +105,9 @@ namespace Swaggerator
 															 where !operation.errorResponses.Any(c => c.code.Equals(r.code))
 															 select r);
 
+				Uri uri = new Uri("http://base" + uriTemplate);
+
+				//try to map each implementation parameter to the uriTemplate.
 				ParameterInfo[] parameters = declaration.GetParameters();
 				foreach (ParameterInfo parameter in parameters)
 				{
@@ -108,10 +118,23 @@ namespace Swaggerator
 						required = true,
 						dataType = Helpers.MapSwaggerType(parameter.ParameterType, typeStack)
 					};
-					if (uriTemplate.Contains("{" + parameter.Name + "}"))
+
+					//path parameters are simple
+					if (uri.LocalPath.Contains("{" + parameter.Name + "}"))
 					{
-						parm.paramType = uriTemplate.IndexOf("{" + parameter.Name + "}") < uriTemplate.IndexOf("?") ? "path" : "query";
+						parm.paramType = "path";
 					}
+					//query parameters require checking rewriting the name, as the query string name may not match the method signature name
+					else if (uri.Query.ToLower().Contains(System.Web.HttpUtility.UrlEncode("{" + parameter.Name + "}")))
+					{
+						parm.paramType = "query";
+						string name = parameter.Name;
+						string paramName = (from p in System.Web.HttpUtility.ParseQueryString(uri.Query).AllKeys
+												  where System.Web.HttpUtility.ParseQueryString(uri.Query).Get(p).Equals("{" + name + "}")
+												  select p).First();
+						parm.name = paramName;
+					}
+					//if we couldn't find it in the uri, it must be a body parameter
 					else
 					{
 						parm.paramType = "body";
@@ -119,7 +142,7 @@ namespace Swaggerator
 					operation.parameters.Add(parm);
 				}
 
-				yield return new Tuple<string, Operation>(uriTemplate, operation);
+				yield return new Tuple<string, Operation>(uri.LocalPath, operation);
 			}
 		}
 
