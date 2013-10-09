@@ -17,17 +17,21 @@ namespace Swaggerator
 	{
 		public Stream GetServices()
 		{
+			return GetServices(AppDomain.CurrentDomain);
+		}
+
+		public Stream GetServices(AppDomain searchDomain)
+		{
 			Models.ServiceList serviceList = new Models.ServiceList
 			{
-				basePath = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + "/api-docs.json",
 				swaggerVersion = Globals.SWAGGER_VERSION,
 				apiVersion = "No Swaggerized assemblies."
 			};
 
-			Assembly[] allAssm = AppDomain.CurrentDomain.GetAssemblies();
+			Assembly[] searchAssemblies = searchDomain.GetAssemblies();
 
 			bool foundAssembly = false;
-			foreach (Assembly assm in allAssm)
+			foreach (Assembly assm in searchAssemblies)
 			{
 				IEnumerable<Models.Service> services = GetDiscoveratedServices(assm);
 				if (services.Any())
@@ -95,11 +99,16 @@ namespace Swaggerator
 
 		public Stream GetServiceDetails(string servicePath)
 		{
+			return GetServiceDetails(AppDomain.CurrentDomain, HttpContext.Current.Request.Url, servicePath);
+		}
+
+		public Stream GetServiceDetails(AppDomain domain, Uri baseUri, string servicePath)
+		{
 			Type serviceType = FindServiceTypeByPath(string.Format("/{0}", servicePath));
 
 			Stack<Type> typeStack = new Stack<Type>();
 
-			string api = Serializers.WriteApi(servicePath, serviceType, typeStack);
+			string api = Serializers.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
 
 			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
 			return ms;

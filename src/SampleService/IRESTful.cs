@@ -6,7 +6,6 @@ using System.ComponentModel;
 
 namespace SampleService
 {
-	// NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IService1" in both code and config file together.
 	[ServiceContract]
 	public interface IRESTful
 	{
@@ -25,6 +24,10 @@ namespace SampleService
 			UriTemplate="/Data/{value}?val={anothervalue}",
 			Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
 		string PutData(string value, string anothervalue);
+
+		[OperationContract]
+		[WebGet(UriTemplate = "/List")]
+		string[] GetList();
 	}
 
 

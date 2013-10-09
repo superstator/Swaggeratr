@@ -17,7 +17,7 @@ namespace Swaggerator
 		/// </summary>
 		/// <param name="serviceType">The implementation type to search.</param>
 		/// <param name="typeStack">Types to be documented in the models section.</param>
-		internal static IEnumerable<Method> FindMethods(Type serviceType, Stack<Type> typeStack)
+		internal static IEnumerable<Method> FindMethods(string path, Type serviceType, Stack<Type> typeStack)
 		{
 			List<Tuple<string, Operation>> operations = new List<Tuple<string, Operation>>();
 
@@ -44,7 +44,7 @@ namespace Swaggerator
 									  select m).FirstOrDefault();
 				if (method == null)
 				{
-					method = new Method { path = t.Item1 };
+					method = new Method { path = path + t.Item1 };
 					methods.Add(method);
 				}
 				method.operations.Add(t.Item2);
@@ -94,11 +94,16 @@ namespace Swaggerator
 				{
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
-					responseClass = Helpers.MapSwaggerType(declaration.ReturnType, typeStack),
+					type = Helpers.MapSwaggerType(declaration.ReturnType, typeStack),
 					//TODO add mechanism to make this somewhat configurable
 					summary = summary,
 					notes = description
 				};
+				if (declaration.ReturnType.IsArray)
+				{
+					//TODO implement array type propery
+					operation.type = "array";
+				}
 
 				operation.errorResponses.AddRange(GetResponseCodes(map.TargetMethods[index]));
 				operation.errorResponses.AddRange(from r in GetResponseCodes(map.InterfaceMethods[index])
@@ -116,7 +121,7 @@ namespace Swaggerator
 						name = parameter.Name,
 						allowMultiple = false,
 						required = true,
-						dataType = Helpers.MapSwaggerType(parameter.ParameterType, typeStack)
+						type = Helpers.MapSwaggerType(parameter.ParameterType, typeStack)
 					};
 
 					//path parameters are simple

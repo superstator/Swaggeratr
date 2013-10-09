@@ -20,7 +20,9 @@ namespace Swaggerator.Models
 		[DataMember]
 		public string nickname { get; set; }
 		[DataMember]
-		public string responseClass { get; set; }
+		public string type { get; set; }
+		[DataMember]
+		public string items { get; set; }
 		[DataMember]
 		public List<Parameter> parameters { get; set; }
 		[DataMember]

@@ -19,8 +19,6 @@ namespace Swaggerator.Models
 		[DataMember]
 		public string swaggerVersion { get; set; }
 		[DataMember]
-		public string basePath { get; set; }
-		[DataMember]
 		public List<Service> apis { get; set; }
 	}	
 }

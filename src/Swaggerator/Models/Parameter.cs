@@ -21,7 +21,7 @@ namespace Swaggerator.Models
 		[DataMember]
 		public string name { get; set; }
 		[DataMember]
-		public string dataType { get; set; }
+		public string type { get; set; }
 		[DataMember]
 		public bool required { get; set; }
 		[DataMember(EmitDefaultValue = false)]

@@ -16,7 +16,7 @@ namespace SampleService
 
 		[Description("A detailed explanation of the fabulous things this method can do for you.")]
 		[ResponseCode(400)]
-		[ResponseCode(401,"Something weird happened")]
+		[ResponseCode(401, "Something weird happened")]
 		public CompositeType GetDataUsingDataContract(CompositeType composite)
 		{
 			if (composite == null)
@@ -44,6 +44,16 @@ namespace SampleService
 		public string PutData(string value, string anothervalue)
 		{
 			return value + anothervalue;
+		}
+
+		public string[] GetList()
+		{
+			return new string[3]
+			{
+				"Foo",
+				"Bar",
+				"Baz"
+			};
 		}
 	}
 }
