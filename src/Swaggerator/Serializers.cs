@@ -47,7 +47,7 @@ namespace Swaggerator
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				writer.WriteStartArray();
-				foreach (Models.Method m in methods)
+				foreach (Models.Method m in methods.OrderBy(s => s.path))
 				{
 					writer.WriteRawValue(JsonConvert.SerializeObject(m));
 				}
