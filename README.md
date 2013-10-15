@@ -10,9 +10,9 @@ You'll need two things - a "discovery" service that lets Swagger know what servi
 ### Discoverator
 To create the discovery service, just add ```[Swaggerator.Discoverator]``` to your RouteTable in Global.asax, like so: 
 ```
-RouteTable.Routes.Add(new ServiceRoute("", new WebServiceHostFactory(), typeof(Swaggerator.Discoverator)));
+RouteTable.Routes.Add(new ServiceRoute("api-docs", new WebServiceHostFactory(), typeof(Swaggerator.Discoverator)));
 ```
-It doesn't need to be the default service on your path, but that's the default setup. This puts a Swagger endpoint "/api-docs.json" at the root of your project.
+The standard for Swagger services is to live under /api-docs, but you can put it wherever you like.
 
 ### Swaggerizing
 To make your service visible to the discovery service, add the ```[Swaggerated]``` tag to a WCF service.
