@@ -70,7 +70,7 @@ namespace Swaggerator.Test
 			Assert.AreEqual("1.0.0.0", obj["apiVersion"]);
 			Assert.IsTrue(obj["apis"].HasValues);
 
-			var api1 = obj["apis"].Children().FirstOrDefault(o => o["path"].Value<string>().Equals("/rest"));
+			var api1 = obj["apis"].Children().FirstOrDefault(o => o["path"].Value<string>().Equals("/v1/rest"));
 			Assert.IsNotNull(api1);
 			Assert.AreEqual("A RESTful WCF Service", api1["description"]);
 

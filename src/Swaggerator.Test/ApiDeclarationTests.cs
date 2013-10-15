@@ -36,7 +36,7 @@ namespace Swaggerator.Test
 		{
 			Discoverator discoverator = new Discoverator();
 
-			Stream stream = discoverator.GetServiceDetails(_TestDomain, new Uri("http://mockhost"), "rest");
+			Stream stream = discoverator.GetServiceDetails(_TestDomain, new Uri("http://mockhost"), "v1/rest");
 			StreamReader reader = new StreamReader(stream);
 			string str = reader.ReadToEnd();
 			Assert.IsFalse(string.IsNullOrEmpty(str));
@@ -45,11 +45,11 @@ namespace Swaggerator.Test
 			Assert.AreEqual("1.2", obj["swaggerVersion"]);
 			Assert.AreEqual("1.0.0.0", obj["apiVersion"]);
 			Assert.AreEqual("http://mockhost", obj["basePath"]);
-			Assert.AreEqual("/rest", obj["resourcePath"]);
+			Assert.AreEqual("/v1/rest", obj["resourcePath"]);
 			Assert.IsTrue(obj["apis"].HasValues);
 
 			var api = obj["apis"][0];
-			Assert.AreEqual("/rest/Data/{value}", api["path"]);
+			Assert.AreEqual("/v1/rest/Data/{value}", api["path"]);
 		}
 	}
 }
