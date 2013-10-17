@@ -63,6 +63,7 @@
     <Content Include="Global.asax" />
     <Content Include="RESTful.svc" />
     <Content Include="SecondaryService.svc" />
+    <Content Include="swagger-ui\dist\api-docs.js" />
     <Content Include="swagger-ui\dist\css\hightlight.default.css" />
     <Content Include="swagger-ui\dist\css\screen.css" />
     <Content Include="swagger-ui\dist\images\logo_small.png" />
@@ -79,6 +80,7 @@
     <Content Include="swagger-ui\dist\lib\jquery.wiggle.min.js" />
     <Content Include="swagger-ui\dist\lib\swagger.js" />
     <Content Include="swagger-ui\dist\lib\underscore-min.js" />
+    <Content Include="swagger-ui\dist\rest.js" />
     <Content Include="swagger-ui\dist\swagger-ui.js" />
     <Content Include="swagger-ui\dist\swagger-ui.min.js" />
     <Content Include="Web.config">
@@ -86,6 +88,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompositeType.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

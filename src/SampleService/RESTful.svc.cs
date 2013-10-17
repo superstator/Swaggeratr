@@ -1,5 +1,6 @@
 ﻿using Swaggerator.Attributes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace SampleService
@@ -26,7 +27,7 @@ namespace SampleService
 			if (composite.BoolValue)
 			{
 				composite.StringValue += "Suffix";
-				composite.Secret = new SecretContainer { SecretData = "Boo!" };
+				composite.Secret = new SecretObject { SecretData = "Boo!" };
 			}
 			return composite;
 		}
@@ -48,7 +49,7 @@ namespace SampleService
 
 		public string[] GetList()
 		{
-			return new string[3]
+			return new []
 			{
 				"Foo",
 				"Bar",

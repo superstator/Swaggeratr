@@ -56,7 +56,7 @@ namespace Swaggerator
 			return sb.ToString();
 		}
 
-		private static string WriteModels(Stack<Type> typeStack)
+		internal static string WriteModels(Stack<Type> typeStack)
 		{
 			StringBuilder sb = new StringBuilder();
 
@@ -79,7 +79,7 @@ namespace Swaggerator
 			return sb.ToString();
 		}
 
-		private static string WriteType(Type t, Stack<Type> typeStack)
+		internal static string WriteType(Type t, Stack<Type> typeStack)
 		{
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
@@ -116,7 +116,6 @@ namespace Swaggerator
 		private static string WriteProperty(PropertyInfo pi, Stack<Type> typeStack)
 		{
 			StringBuilder sb = new StringBuilder();
-			//sb.AppendFormat("\"{0}\"", pi.Name);
 			StringWriter sw = new StringWriter(sb);
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
@@ -125,6 +124,14 @@ namespace Swaggerator
 				writer.WriteValue(Helpers.MapSwaggerType(pi.PropertyType, typeStack));
 				writer.WritePropertyName("required");
 				writer.WriteValue(true);
+
+				if (Helpers.MapSwaggerType(pi.PropertyType, typeStack) == "array")
+				{
+					writer.WritePropertyName("items");
+					writer.WriteStartObject();
+					writer.WritePropertyName("$ref");
+					writer.WriteValue(Helpers.MapElementType(pi.PropertyType, typeStack));
+				}
 
 				DescriptionAttribute description = pi.GetCustomAttribute<DescriptionAttribute>();
 				if (description != null)

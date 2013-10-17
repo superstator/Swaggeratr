@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.ComponentModel;
+using System.Collections.Generic;
 
 namespace SampleService
 {
@@ -31,37 +32,5 @@ namespace SampleService
 	}
 
 
-	[DataContract]
-	public class CompositeType
-	{
-		bool _BoolValue = true;
-		string _StringValue = "Hello ";
-
-		[DataMember]
-		[Description("Whatever you do don't set this to")]
-		public bool BoolValue
-		{
-			get { return _BoolValue; }
-			set { _BoolValue = value; }
-		}
-
-		[DataMember]
-		public string StringValue
-		{
-			get { return _StringValue; }
-			set { _StringValue = value; }
-		}
-
-		[Hidden]
-		[DataMember(EmitDefaultValue = false)]
-		public SecretContainer Secret { get; set; }
-	}
-
-	[Hidden]
-	[DataContract]
-	public class SecretContainer
-	{
-		[DataMember]
-		public string SecretData { get; set; }
-	}
+	
 }

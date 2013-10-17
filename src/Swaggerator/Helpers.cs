@@ -5,12 +5,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Swaggerator
 {
 	internal static class Helpers
 	{
+		private static readonly Regex _GenericTypeRegex = new Regex("^(.*)`.*");
+
+
 		public static string MapSwaggerType(Type type, Stack<Type> typeMap)
 		{
 			if (type == typeof(byte)) { return "byte"; }
@@ -21,17 +26,33 @@ namespace Swaggerator
 			if (type == typeof(double)) { return "double"; }
 			if (type == typeof(string)) { return "string"; }
 			if (type == typeof(DateTime)) { return "Date"; }
-			//if (type.IsArray) { return MapSwaggerArrayType(type, typeMap); }
-			else
+
+			//it's a collection/array, so it will use the swagger "container" syntax
+			if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
 			{
-				if (!typeMap.Contains(type)) { typeMap.Push(type); }
-				return type.FullName;
+				return "array";
 			}
+
+			//it's a complex type, so we'll need to map it later
+			if (!typeMap.Contains(type)) { typeMap.Push(type); }
+			return type.FullName;
 		}
 
-		//public static string MapSwaggerArrayType(Type type, Stack<Type> typeMap)
+		//public static string GetTypeName(Type type, Stack<Type> typeMap)
 		//{
-		//	return @"{""type"":""array"",""items"":""string""}";
+		//	if (type.IsArray)
+		//	{
+		//		string elementType = MapSwaggerType(type.GetElementType(), typeMap);
+		//		return elementType + "[]";
+		//	}
+
+		//	if (type.IsGenericType)
+		//	{
+		//		string genericArgs = string.Join(", ", type.GenericTypeArguments.Select(t => MapSwaggerType(t, typeMap)));
+		//		return _GenericTypeRegex.Replace(type.FullName, string.Format("$1<{0}>", genericArgs));
+		//	}
+
+		//	return type.FullName;
 		//}
 
 		public static T1 GetCustomAttributeValue<T1, T2>(MethodInfo method, string propertyName)
@@ -45,6 +66,15 @@ namespace Swaggerator
 			if (prop == null || prop.PropertyType != typeof(T1)) { return null; }
 
 			return prop.GetValue(attr) as T1;
+		}
+
+		internal static string MapElementType(Type type, Stack<Type> typeStack)
+		{
+			Type enumType = type.GetInterfaces().FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+			if (enumType == null) { throw new ArgumentException("Type must be an IEnumerable<T>."); }
+
+			Type elementType = enumType.GetGenericArguments().First();
+			return MapSwaggerType(elementType, typeStack);
 		}
 	}
 }
