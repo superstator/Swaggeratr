@@ -55,14 +55,17 @@ namespace Swaggerator.Test
 			Assert.AreEqual("SampleService.CompositeType", obj["id"].ToString());
 
 			var container = obj["properties"]["ArrayValue"];
+            Assert.IsNotNull(container);
 			Assert.AreEqual("array", container["type"]);
 			Assert.AreEqual("string", container["items"]["$ref"]);
-		}
 
-		[TestMethod]
-		public void CanWriteOperation()
-		{
-			
+            var enumProperty = obj["properties"]["EnumValue"];
+            Assert.IsNotNull(enumProperty);
+            Assert.AreEqual("string", enumProperty["type"]);
+
+            var enumValues = enumProperty["enum"] as JArray;
+            Assert.AreEqual(3, enumValues.Count);
+            //Assert.IsTrue(enumValues.Contains("Alpha"));
 		}
 	}
 }

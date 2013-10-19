@@ -28,7 +28,7 @@ namespace SampleService
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/List")]
-		string[] GetList();
+		CompositeType[] GetList();
 	}
 
 

@@ -21,7 +21,6 @@ namespace SampleService
 		[Description("Whatever you do don't set this to")]
 		public bool BoolValue{get;set ;}
 
-
 		[DataMember]
 		public string StringValue { get; set; }
 
@@ -31,7 +30,17 @@ namespace SampleService
 
 		[DataMember]
 		public List<string> ArrayValue { get; set; }
+
+        [DataMember]
+        public EnumType EnumValue { get; set; }
 	}
+
+    public enum EnumType
+    {
+        Alpha,
+        Beta,
+        Gamma
+    }
 
 	[DataContract]
 	public class SecretObject
