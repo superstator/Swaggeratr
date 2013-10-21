@@ -23,7 +23,7 @@ namespace Swaggerator.Test
 			var props = obj["properties"] as JObject;
 			Assert.IsNotNull(props);
 			Assert.IsTrue(props.HasValues);
-			Assert.AreEqual(3, props.Count);
+			Assert.AreEqual(4, props.Count);
 
 			Assert.AreEqual("string", props["StringValue"]["type"]);
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
