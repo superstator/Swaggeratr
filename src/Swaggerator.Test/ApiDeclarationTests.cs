@@ -49,7 +49,7 @@ namespace Swaggerator.Test
 			Assert.IsTrue(obj["apis"].HasValues);
 
 			var api = obj["apis"][0];
-			Assert.AreEqual("/v1/rest/Data/{value}", api["path"]);
+			Assert.AreEqual("/v1/rest/data", api["path"]);
 		}
 	}
 }
