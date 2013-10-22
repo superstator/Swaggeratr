@@ -60,7 +60,7 @@ namespace Swaggerator
         /// <param name="map">Mapping of the service interface & implementation.</param>
         /// <param name="typeStack">Complex types that will need later processing.</param>
         /// <returns></returns>
-        private static IEnumerable<Tuple<string, Operation>> GetOperations(InterfaceMapping map, Stack<Type> typeStack)
+        internal static IEnumerable<Tuple<string, Operation>> GetOperations(InterfaceMapping map, Stack<Type> typeStack)
         {
             for (int index = 0; index < map.InterfaceMethods.Count(); index++)
             {
