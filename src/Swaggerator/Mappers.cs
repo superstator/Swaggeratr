@@ -132,13 +132,13 @@ namespace Swaggerator
                     {
                         parm.paramType = "path";
                     }
-                    //query parameters require checking rewriting the name, as the query string name may not match the method signature name
-                    else if (uri.Query.ToLower().Contains(HttpUtility.UrlEncode("{" + parameter.Name + "}")))
+                    //query parameters require checking and rewriting the name, as the query string name may not match the method signature name
+                    else if (uri.Query.ToLower().Contains(HttpUtility.UrlEncode("{" + parameter.Name.ToLower() + "}")))
                     {
                         parm.paramType = "query";
                         string name = parameter.Name;
                         string paramName = (from p in HttpUtility.ParseQueryString(uri.Query).AllKeys
-                                            where HttpUtility.ParseQueryString(uri.Query).Get(p).Equals("{" + name + "}")
+                                            where HttpUtility.ParseQueryString(uri.Query).Get(p).ToLower().Equals("{" + name.ToLower() + "}")
                                             select p).First();
                         parm.name = paramName;
                     }

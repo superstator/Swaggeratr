@@ -18,33 +18,31 @@ namespace Swaggerator.Test
             Assert.AreEqual(0, typeMap.Count);
         }
 
-        [TestMethod]
-        public void CanMapOperation()
-        {
-            var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
-            var operations = Mappers.GetOperations(map, new Stack<Type>());
+		  [TestMethod]
+		  public void CanMapOperation()
+		  {
+			  var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			  var operations = Mappers.GetOperations(map, new Stack<Type>());
 
-            Assert.AreEqual(1, operations.Count());
-            Assert.AreEqual("/method/{uno}", operations.First().Item1);
-            var operation = operations.First().Item2;
-            
-            Assert.AreEqual(3, operation.parameters.Count);
+			  Assert.AreEqual(1, operations.Count());
+			  Assert.AreEqual("/method/test", operations.First().Item1);
+			  var operation = operations.First().Item2;
 
-            var uno = operation.parameters.Where(p => p.name.Equals("uno")).First();
-            var dos = operation.parameters.Where(p => p.name.Equals("dos")).First();
-            var tres = operation.parameters.Where(p => p.name.Equals("three")).First();
+			  Assert.AreEqual(3, operation.parameters.Count);
 
-            Assert.AreEqual("path", uno.paramType);
-            Assert.AreEqual("query", dos.paramType);
-            Assert.AreEqual("query", tres.paramType);
+			  var uno = operation.parameters.Where(p => p.name.Equals("uno")).First();
+			  var dos = operation.parameters.Where(p => p.name.Equals("dos")).First();
+			  var tres = operation.parameters.Where(p => p.name.Equals("tRes")).First();
 
-            Assert.Fail("Need repro for issue #14");
-        }
-
+			  Assert.AreEqual("query", uno.paramType);
+			  Assert.AreEqual("query", dos.paramType);
+			  Assert.AreEqual("query", tres.paramType);
+		  }
+		 
         interface IMapTest
         {
-            [System.ServiceModel.Web.WebGet(UriTemplate = "/method/{uno}?dos={dos}&three={tres}")]
-            int Method(string uno, string dos, string tres);
+            [System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
+            int Method(string uno, string dos, string thRee);
         }
 
         class MapTest : IMapTest
