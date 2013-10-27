@@ -32,7 +32,7 @@ namespace SampleService
 		public List<string> ArrayValue { get; set; }
 
         [DataMember]
-        public EnumType EnumValue { get; set; }
+        public EnumType? EnumValue { get; set; }
 	}
 
     public enum EnumType

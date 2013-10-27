@@ -117,27 +117,36 @@ namespace Swaggerator
         {
             StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
+
+            Type pType = pi.PropertyType;
+            bool required = true;
+            if (pType.IsGenericType && pType.GetGenericTypeDefinition() == typeof(System.Nullable<>))
+            {
+                required = false;
+                pType = pType.GetGenericArguments().First();
+            }
+
             using (JsonWriter writer = new JsonTextWriter(sw))
             {
                 writer.WriteStartObject();
                 writer.WritePropertyName("type");
-                writer.WriteValue(Helpers.MapSwaggerType(pi.PropertyType, typeStack));
+                writer.WriteValue(Helpers.MapSwaggerType(pType, typeStack));
                 writer.WritePropertyName("required");
-                writer.WriteValue(true);
+                writer.WriteValue(required);
 
-                if (Helpers.MapSwaggerType(pi.PropertyType, typeStack) == "array")
+                if (Helpers.MapSwaggerType(pType, typeStack) == "array")
                 {
                     writer.WritePropertyName("items");
                     writer.WriteStartObject();
                     writer.WritePropertyName("$ref");
-                    writer.WriteValue(Helpers.MapElementType(pi.PropertyType, typeStack));
+                    writer.WriteValue(Helpers.MapElementType(pType, typeStack));
                 }
 
-                if (pi.PropertyType.IsEnum)
+                if (pType.IsEnum)
                 {
                     writer.WritePropertyName("enum");
                     writer.WriteStartArray();
-                    foreach (string value in pi.PropertyType.GetEnumNames())
+                    foreach (string value in pType.GetEnumNames())
                     {
                         writer.WriteValue(value);
                     }

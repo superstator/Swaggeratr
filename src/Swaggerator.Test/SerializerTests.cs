@@ -28,6 +28,8 @@ namespace Swaggerator.Test
 			Assert.AreEqual("string", props["StringValue"]["type"]);
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
+            Assert.AreEqual("string", props["EnumValue"]["type"]);
+            Assert.AreEqual(false, props["EnumValue"]["required"]);
 		}
 
 		[TestMethod]
