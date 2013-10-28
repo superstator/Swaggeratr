@@ -9,6 +9,7 @@ using System.Web;
 using System.IO;
 using Newtonsoft.Json;
 using System.ServiceModel.Activation;
+using System.Configuration;
 
 namespace Swaggerator
 {

@@ -59,6 +59,8 @@
     <Compile Include="Attributes\OperationSummaryAttribute.cs" />
     <Compile Include="Attributes\ResponseCodeAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
+    <Compile Include="Configuration\SwaggerSection.cs" />
+    <Compile Include="Configuration\TagElement.cs" />
     <Compile Include="Discoverator.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IDiscoverator.cs" />
