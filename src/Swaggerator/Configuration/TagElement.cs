@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Swaggerator.Configuration
 {
-    public class TagElement: ConfigurationElement
-    {
-        [ConfigurationProperty("name", IsRequired = true)]
-        public string Name
-        {
-            get { return (string)this["name"]; }
-            set { this["name"] = value; }
-        }
+	public class TagElement : ConfigurationElement
+	{
+		[ConfigurationProperty("name", IsRequired = true, IsKey = true)]
+		public string Name
+		{
+			get { return (string)this["name"]; }
+			set { this["name"] = value; }
+		}
 
-        [ConfigurationProperty("visible", DefaultValue = true, IsRequired = true)]
-        public bool Visibile
-        {
-            get { return (bool)this["visible"]; }
-            set { this["visible"] = value; }
-        }
-    }
+		[ConfigurationProperty("visible", DefaultValue = true, IsRequired = true)]
+		public bool Visibile
+		{
+			get { return (bool)this["visible"]; }
+			set { this["visible"] = value; }
+		}
+	}
 }

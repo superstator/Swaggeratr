@@ -7,20 +7,13 @@ using System.Threading.Tasks;
 
 namespace Swaggerator.Configuration
 {
-    public class SwaggerSection : ConfigurationSection
-    {
-        [ConfigurationProperty("tag")]
-        public TagElement Tag
-        {
-            get { return (TagElement)this["tag"]; }
-            set { this["tag"] = value; }
-        }
-
-        [ConfigurationProperty("serviceName", IsRequired = true, DefaultValue = "*")]
-        public string ServiceName
-        {
-            get { return (string)this["serviceName"]; }
-            set { this["serviceName"] = value; }
-        }
-    }
+	public class SwaggerSection : ConfigurationSection
+	{
+		[ConfigurationProperty("tags", IsRequired = true)]
+		public TagCollection Tags
+		{
+			get { return (TagCollection)this["tags"]; }
+			set { this["tags"] = value; }
+		}
+	}
 }

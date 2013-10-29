@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Web;
+using System.Linq;
 
 namespace Swaggerator.Test
 {
@@ -13,7 +14,8 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteCompositeType()
 		{
-			string model = Swaggerator.Serializers.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
+			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
 			var obj = JObject.Parse(model);
@@ -28,17 +30,18 @@ namespace Swaggerator.Test
 			Assert.AreEqual("string", props["StringValue"]["type"]);
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
-            Assert.AreEqual("string", props["EnumValue"]["type"]);
-            Assert.AreEqual(false, props["EnumValue"]["required"]);
+			Assert.AreEqual("string", props["EnumValue"]["type"]);
+			Assert.AreEqual(false, props["EnumValue"]["required"]);
 		}
 
 		[TestMethod]
 		public void CanWriteTypeStack()
 		{
+			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
 			Stack<Type> typeStack = new Stack<Type>();
 			typeStack.Push(typeof(SampleService.CompositeType));
 
-			string models = Serializers.WriteModels(typeStack);
+			string models = serializer.WriteModels(typeStack);
 
 			var obj = JObject.Parse(HttpUtility.UrlDecode(models));
 
@@ -49,7 +52,9 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteContainerProperty()
 		{
-			string model = Swaggerator.Serializers.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
+
+			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
 			var obj = JObject.Parse(HttpUtility.UrlDecode(model));
@@ -57,17 +62,17 @@ namespace Swaggerator.Test
 			Assert.AreEqual("SampleService.CompositeType", obj["id"].ToString());
 
 			var container = obj["properties"]["ArrayValue"];
-            Assert.IsNotNull(container);
+			Assert.IsNotNull(container);
 			Assert.AreEqual("array", container["type"]);
 			Assert.AreEqual("string", container["items"]["$ref"]);
 
-            var enumProperty = obj["properties"]["EnumValue"];
-            Assert.IsNotNull(enumProperty);
-            Assert.AreEqual("string", enumProperty["type"]);
+			var enumProperty = obj["properties"]["EnumValue"];
+			Assert.IsNotNull(enumProperty);
+			Assert.AreEqual("string", enumProperty["type"]);
 
-            var enumValues = enumProperty["enum"] as JArray;
-            Assert.AreEqual(3, enumValues.Count);
-            //Assert.IsTrue(enumValues.Contains("Alpha"));
+			var enumValues = enumProperty["enum"] as JArray;
+			Assert.AreEqual(3, enumValues.Count);
+			Assert.IsTrue(enumValues.Any(v => v.ToString().Equals("Alpha")));
 		}
 	}
 }

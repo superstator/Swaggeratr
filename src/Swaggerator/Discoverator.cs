@@ -9,13 +9,33 @@ using System.Web;
 using System.IO;
 using Newtonsoft.Json;
 using System.ServiceModel.Activation;
-using System.Configuration;
 
 namespace Swaggerator
 {
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class Discoverator : IDiscoverator
 	{
+		/// <summary>
+		/// Gets a new instance of the core Discoverator service
+		/// </summary>
+		/// <param name="sectionName">Name of a custom config section (if present) for Swagger tags, etc.</param>
+		public Discoverator(string sectionName = "")
+		{
+			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection(sectionName) ?? new Configuration.SwaggerSection());
+			TagSettings = config.Tags.OfType<Configuration.TagElement>().ToDictionary(t => t.Name);
+			_Serializer = new Serializer(TagSettings);
+		}
+
+		internal Discoverator(Dictionary<string, Configuration.TagElement> tags)
+		{
+			TagSettings = tags;
+			_Serializer = new Serializer(tags);
+		}
+
+		private readonly Serializer _Serializer;
+
+		internal Dictionary<string, Configuration.TagElement> TagSettings;
+
 		public Stream GetServices()
 		{
 			return GetServices(AppDomain.CurrentDomain);
@@ -59,7 +79,7 @@ namespace Swaggerator
 			{
 				types = assembly.DefinedTypes;
 			}
-			catch (ReflectionTypeLoadException ex)
+			catch (ReflectionTypeLoadException)
 			{
 				//couldn't load this assembly - probably a non-issue
 				yield break;
@@ -109,7 +129,7 @@ namespace Swaggerator
 
 			Stack<Type> typeStack = new Stack<Type>();
 
-			string api = Serializers.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
+			string api = _Serializer.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
 
 			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
 			return ms;

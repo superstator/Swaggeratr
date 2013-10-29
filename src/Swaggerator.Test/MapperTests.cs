@@ -5,49 +5,63 @@ using System.Linq;
 
 namespace Swaggerator.Test
 {
-    [TestClass]
-    public class MapperTests
-    {
-        [TestMethod]
-        public void CanMapCollectionTypes()
-        {
-            var typeMap = new Stack<Type>();
-            Assert.AreEqual("array", Helpers.MapSwaggerType(typeof(List<string>), typeMap));
-            Assert.AreEqual("array", Helpers.MapSwaggerType(typeof(int[]), typeMap));
+	[TestClass]
+	public class MapperTests
+	{
+		[TestMethod]
+		public void CanMapCollectionTypes()
+		{
+			var typeMap = new Stack<Type>();
+			Assert.AreEqual("array", Helpers.MapSwaggerType(typeof(List<string>), typeMap));
+			Assert.AreEqual("array", Helpers.MapSwaggerType(typeof(int[]), typeMap));
 
-            Assert.AreEqual(0, typeMap.Count);
-        }
+			Assert.AreEqual(0, typeMap.Count);
+		}
 
-		  [TestMethod]
-		  public void CanMapOperation()
-		  {
-			  var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
-			  var operations = Mappers.GetOperations(map, new Stack<Type>());
+		[TestMethod]
+		public void CanMapOperation()
+		{
+			var tags = new Dictionary<string, Configuration.TagElement>();
+			tags.Add("SecretThings", new Configuration.TagElement
+			{
+				Visibile = false,
+				Name = "SecretThings"
+			});
+			var mapper = new Mapper(tags);
 
-			  Assert.AreEqual(1, operations.Count());
-			  Assert.AreEqual("/method/test", operations.First().Item1);
-			  var operation = operations.First().Item2;
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			  Assert.AreEqual(3, operation.parameters.Count);
+			Assert.AreEqual(1, operations.Count());
+			Assert.AreEqual("/method/test", operations.First().Item1);
+			var operation = operations.First().Item2;
 
-			  var uno = operation.parameters.Where(p => p.name.Equals("uno")).First();
-			  var dos = operation.parameters.Where(p => p.name.Equals("dos")).First();
-			  var tres = operation.parameters.Where(p => p.name.Equals("tRes")).First();
+			Assert.AreEqual(3, operation.parameters.Count);
 
-			  Assert.AreEqual("query", uno.paramType);
-			  Assert.AreEqual("query", dos.paramType);
-			  Assert.AreEqual("query", tres.paramType);
-		  }
-		 
-        interface IMapTest
-        {
-            [System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
-            int Method(string uno, string dos, string thRee);
-        }
+			var uno = operation.parameters.Where(p => p.name.Equals("uno")).First();
+			var dos = operation.parameters.Where(p => p.name.Equals("dos")).First();
+			var tres = operation.parameters.Where(p => p.name.Equals("tRes")).First();
 
-        class MapTest : IMapTest
-        {
-            public int Method(string uno, string dos, string tres) { throw new NotImplementedException(); }
-        }
-    }
+			Assert.AreEqual("query", uno.paramType);
+			Assert.AreEqual("query", dos.paramType);
+			Assert.AreEqual("query", tres.paramType);
+		}
+
+		interface IMapTest
+		{
+			[System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
+			int Method(string uno, string dos, string thRee);
+
+			[Swaggerator.Attributes.Tag("SecretThings")]
+			[System.ServiceModel.Web.WebGet(UriTemplate = "/keepitsecret")]
+			int SecretMethod();
+		}
+
+		class MapTest : IMapTest
+		{
+			public int Method(string uno, string dos, string tres) { throw new NotImplementedException(); }
+
+			public int SecretMethod() { throw new NotImplementedException(); }
+		}
+	}
 }
