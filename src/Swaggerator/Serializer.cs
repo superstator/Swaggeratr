@@ -15,13 +15,13 @@ namespace Swaggerator
 {
 	internal class Serializer
 	{
-		internal Serializer(Dictionary<string, Configuration.TagElement> tagSettings)
+		internal Serializer(IEnumerable<string> hiddenTags)
 		{
-			_TagSettings = tagSettings;
-			_Mapper = new Mapper(tagSettings);
+			HiddenTags = hiddenTags ?? new List<string>();
+			_Mapper = new Mapper(HiddenTags);
 		}
 
-		private readonly Dictionary<string, Configuration.TagElement> _TagSettings;
+		private readonly IEnumerable<string> HiddenTags;
 		private readonly Mapper _Mapper;
 
 		internal string WriteApi(Uri basePath, string servicePath, Type serviceType, Stack<Type> typeStack)
@@ -103,17 +103,20 @@ namespace Swaggerator
 			return sb.ToString();
 		}
 
-		private string WriteProperties(Type t, Stack<Type> typeStack)
+		private string WriteProperties(Type type, Stack<Type> typeStack)
 		{
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				writer.WriteStartObject();
-				foreach (PropertyInfo pi in t.GetProperties())
+				foreach (PropertyInfo pi in type.GetProperties())
 				{
 					if (pi.GetCustomAttribute<DataMemberAttribute>() == null ||
-						  pi.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
+						 pi.GetCustomAttribute<HiddenAttribute>() != null ||
+						 pi.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Any(HiddenTags.Contains))
+					{ continue; }
+
 					writer.WritePropertyName(pi.Name);
 					writer.WriteRawValue(WriteProperty(pi, typeStack));
 				}

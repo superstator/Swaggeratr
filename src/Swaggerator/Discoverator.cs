@@ -18,23 +18,22 @@ namespace Swaggerator
 		/// <summary>
 		/// Gets a new instance of the core Discoverator service
 		/// </summary>
-		/// <param name="sectionName">Name of a custom config section (if present) for Swagger tags, etc.</param>
-		public Discoverator(string sectionName = "")
+		public Discoverator()
 		{
+			string sectionName = "swagger";
 			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection(sectionName) ?? new Configuration.SwaggerSection());
-			TagSettings = config.Tags.OfType<Configuration.TagElement>().ToDictionary(t => t.Name);
-			_Serializer = new Serializer(TagSettings);
+			HiddenTags = config.Tags.OfType<Configuration.TagElement>().Where(t => t.Visibile.Equals(false)).Select(t => t.Name);
+			_Serializer = new Serializer(HiddenTags);
 		}
 
-		internal Discoverator(Dictionary<string, Configuration.TagElement> tags)
+		internal Discoverator(IEnumerable<string> hiddenTags)
 		{
-			TagSettings = tags;
-			_Serializer = new Serializer(tags);
+			HiddenTags = hiddenTags;
+			_Serializer = new Serializer(HiddenTags);
 		}
 
+		internal readonly IEnumerable<string> HiddenTags;
 		private readonly Serializer _Serializer;
-
-		internal Dictionary<string, Configuration.TagElement> TagSettings;
 
 		public Stream GetServices()
 		{

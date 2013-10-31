@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Web;
 using System.Linq;
+using Swaggerator.Attributes;
 
 namespace Swaggerator.Test
 {
@@ -14,7 +15,7 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteCompositeType()
 		{
-			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
+			Serializer serializer = new Serializer(null);
 			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
@@ -27,7 +28,6 @@ namespace Swaggerator.Test
 			Assert.IsTrue(props.HasValues);
 			Assert.AreEqual(4, props.Count);
 
-			Assert.AreEqual("string", props["StringValue"]["type"]);
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
 			Assert.AreEqual("string", props["EnumValue"]["type"]);
@@ -37,7 +37,7 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteTypeStack()
 		{
-			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
+			Serializer serializer = new Serializer(new [] { "InternalUse" });
 			Stack<Type> typeStack = new Stack<Type>();
 			typeStack.Push(typeof(SampleService.CompositeType));
 
@@ -52,7 +52,7 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteContainerProperty()
 		{
-			Serializer serializer = new Serializer(new Dictionary<string, Configuration.TagElement>());
+			Serializer serializer = new Serializer(null);
 
 			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
@@ -74,5 +74,30 @@ namespace Swaggerator.Test
 			Assert.AreEqual(3, enumValues.Count);
 			Assert.IsTrue(enumValues.Any(v => v.ToString().Equals("Alpha")));
 		}
+
+		[TestMethod]
+		public void CanHideHiddenTypes()
+		{
+			//gets the Secret property when it's tag isn't configured
+			var serializerAll = new Serializer(null);
+
+			string modelAll = serializerAll.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(modelAll));
+
+			var objAll = JObject.Parse(modelAll);
+			Assert.IsNotNull(objAll["properties"]["ArrayValue"]);
+			Assert.IsNotNull(objAll["properties"]["Secret"]);
+
+			//hides it when it is
+			var serializer = new Serializer(new [] { "InternalUse" });
+
+			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(model));
+
+			var obj = JObject.Parse(model);
+			Assert.IsNotNull(obj["properties"]["ArrayValue"]);
+			Assert.IsNull(obj["properties"]["Secret"]);
+		}
+
 	}
 }

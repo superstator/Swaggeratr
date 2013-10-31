@@ -21,13 +21,7 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanMapOperation()
 		{
-			var tags = new Dictionary<string, Configuration.TagElement>();
-			tags.Add("SecretThings", new Configuration.TagElement
-			{
-				Visibile = false,
-				Name = "SecretThings"
-			});
-			var mapper = new Mapper(tags);
+			var mapper = new Mapper(new List<string> { "SecretThings" });
 
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());

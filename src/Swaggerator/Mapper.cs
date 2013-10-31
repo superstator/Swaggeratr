@@ -13,12 +13,12 @@ namespace Swaggerator
 {
 	internal class Mapper
 	{
-		internal Mapper(Dictionary<string, Configuration.TagElement> tagSettings)
+		internal Mapper(IEnumerable<string> hiddenTags)
 		{
-			_TagSettings = tagSettings;
+			HiddenTags = hiddenTags ?? new List<string>();
 		}
 
-		private readonly Dictionary<string, Configuration.TagElement> _TagSettings;
+		internal readonly IEnumerable<string> HiddenTags;
 
 		/// <summary>
 		/// Find methods of the supplied type which have WebGet or WebInvoke attributes.
@@ -80,8 +80,7 @@ namespace Swaggerator
 
 				//if a tag from either implementation or declaration is marked as not visible, skip it
 				var methodTags = implementation.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Concat(declaration.GetCustomAttributes<TagAttribute>().Select(t => t.TagName));
-				var hiddenTags = _TagSettings.Values.Where(t => t.Visibile.Equals(false)).Select(t => t.Name);
-				if (methodTags.Any(hiddenTags.Contains)) { continue; }
+				if (methodTags.Any(HiddenTags.Contains)) { continue; }
 
 				//find the WebGet/Invoke attributes, or skip if neither is present
 				WebGetAttribute wg = declaration.GetCustomAttribute<WebGetAttribute>();
