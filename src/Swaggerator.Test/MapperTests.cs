@@ -49,20 +49,34 @@ namespace Swaggerator.Test
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			var operation = operations.First(o=>o.Item1.Equals("/keepitsecret")).Item2;
+			var operation = operations.First(o => o.Item1.Equals("/keepitsecret")).Item2;
 
 			Assert.AreEqual(1, operation.errorResponses.Count());
 			Assert.AreEqual("Just because.", operation.errorResponses[0].message);
 			Assert.AreEqual(500, operation.errorResponses[0].code);
 		}
 
+		[TestMethod]
+		public void CanMapNotesAndSummary()
+		{
+			var mapper = new Mapper(null);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/method/test")).Item2;
+
+			Assert.AreEqual("Short format", operation.summary);
+			Assert.AreEqual("Long format", operation.notes);
+		}
+
 		interface IMapTest
 		{
+			[Swaggerator.Attributes.OperationSummary("Short format"), Swaggerator.Attributes.OperationNotes("Long format")]
 			[System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
 			int Method(string uno, string dos, string thRee);
 
 			[Swaggerator.Attributes.Tag("SecretThings")]
-			[Swaggerator.Attributes.ResponseCode(500,"Just because.")]
+			[Swaggerator.Attributes.ResponseCode(500, "Just because.")]
 			[System.ServiceModel.Web.WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
 		}
