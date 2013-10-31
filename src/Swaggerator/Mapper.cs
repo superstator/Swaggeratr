@@ -109,7 +109,6 @@ namespace Swaggerator
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
 					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(declaration.ReturnType, typeStack)),
-					//TODO add mechanism to make this somewhat configurable
 					summary = summary,
 					notes = description
 				};
@@ -144,11 +143,13 @@ namespace Swaggerator
 					if (uri.LocalPath.Contains("{" + parameter.Name + "}"))
 					{
 						parm.paramType = "path";
+						parm.required = true;
 					}
 					//query parameters require checking and rewriting the name, as the query string name may not match the method signature name
 					else if (uri.Query.ToLower().Contains(HttpUtility.UrlEncode("{" + parameter.Name.ToLower() + "}")))
 					{
 						parm.paramType = "query";
+						parm.required = false;
 						string name = parameter.Name;
 						string paramName = (from p in HttpUtility.ParseQueryString(uri.Query).AllKeys
 												  where HttpUtility.ParseQueryString(uri.Query).Get(p).ToLower().Equals("{" + name.ToLower() + "}")
@@ -159,7 +160,20 @@ namespace Swaggerator
 					else
 					{
 						parm.paramType = "body";
+						parm.required = true;
 					}
+
+
+					var settings = implementation.GetParameters().First(p => p.Position.Equals(parameter.Position)).GetCustomAttribute<ParameterSettings>() ??
+						parameter.GetCustomAttribute<Attributes.ParameterSettings>();
+					if (settings != null)
+					{
+						parm.required = settings.IsRequired;
+						parm.description = settings.Description ?? parm.description;
+						parm.type = settings.UnderlyingType == null ? parm.type :
+							Helpers.MapSwaggerType(settings.UnderlyingType, typeStack);
+					}
+
 					operation.parameters.Add(parm);
 				}
 

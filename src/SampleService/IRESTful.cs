@@ -23,9 +23,10 @@ namespace SampleService
 
 		[OperationContract]
 		[WebInvoke(
-			UriTemplate="/Data/{value}?val={anothervalue}",
+			UriTemplate = "/Data/{value}?val={anothervalue}&option={optionalvalue}",
 			Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
-		string PutData(string value, string anothervalue);
+		string PutData(string value, [ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")]string anothervalue,
+			[ParameterSettings(UnderlyingType = typeof(int))]string optionalvalue);
 
 		[OperationContract]
 		[WebGet(UriTemplate = "/List")]
@@ -33,5 +34,5 @@ namespace SampleService
 	}
 
 
-	
+
 }
