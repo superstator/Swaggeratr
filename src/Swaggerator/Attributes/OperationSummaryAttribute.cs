@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Swaggerator.Attributes
 {
-    public class OperationSummaryAttribute:Attribute
+    public class OperationSummaryAttribute : Attribute
     {
         public OperationSummaryAttribute(string summary)
         {

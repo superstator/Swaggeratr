@@ -92,6 +92,8 @@ namespace Swaggerator
 
 				//implementation description overrides interface description
 				string description =
+					 Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(implementation, "Notes") ??
+					 Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(declaration, "Notes") ??
 					 Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(implementation, "Description") ??
 					 Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(declaration, "Description") ??
 					 "";

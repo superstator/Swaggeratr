@@ -15,6 +15,7 @@ namespace SampleService
 		string GetData(string value);
 
 		[OperationSummary("Does stuff.")]
+		[OperationNotes("I mean, it does some really interesting stuff. Stuff like you wouldn't believe.")]
 		[ResponseCode(400, "This will be overridden by the implementation")]
 		[OperationContract]
 		[WebInvoke(UriTemplate = "/data", Method = "POST", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
