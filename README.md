@@ -33,6 +33,22 @@ You can add the ```[Hidden]``` attribute to classes to keep them out of the ```m
 
 Lastly, you can add the ```[Hidden]``` attribute to a specific property of a type. The rest of the type will still be returned in the ```models``` section.
 
+If you want more finegrained control of display things, you can use the ```[Tag()]``` attribute to identify something, and then specify in configuration whether those things are visible or not. For instance, you could tag some special methods as "InternalUse", and then add the following to your production web.config:
+
+```
+  <configSections>
+    <section name="swagger" type="Swaggerator.Configuration.SwaggerSection, Swaggerator" />
+  </configSections>
+
+  <swagger>
+    <tags>
+      <tag name="InternalUse" visible="false" />
+    </tags>
+  </swagger>
+```
+
+Meanwhile on your dev server, you'd set the visible property of the "InternalUse" tag to true, or leave it out of the config entirely. Note this does not prevent users accessing those methods if they aren't properly secured - it only prevents documentation for them being generated.
+
 There are some other attributes that may come in handy as well, like ```[OperationSummary]```, or ```[ResponseCode]```. Play around with it - you probably won't break anything.
 
 ### That's it!
