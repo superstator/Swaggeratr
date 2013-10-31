@@ -19,28 +19,29 @@ namespace SampleService
 
 		[DataMember]
 		[Description("Whatever you do don't set this to")]
-		public bool BoolValue{get;set ;}
+		public bool BoolValue { get; set; }
 
+		[Hidden]
 		[DataMember]
 		public string StringValue { get; set; }
 
-		[Hidden]
+		[Tag("InternalUse")]
 		[DataMember(EmitDefaultValue = false)]
 		public SecretObject Secret { get; set; }
 
 		[DataMember]
 		public List<string> ArrayValue { get; set; }
 
-        [DataMember]
-        public EnumType EnumValue { get; set; }
+		[DataMember]
+		public EnumType? EnumValue { get; set; }
 	}
 
-    public enum EnumType
-    {
-        Alpha,
-        Beta,
-        Gamma
-    }
+	public enum EnumType
+	{
+		Alpha,
+		Beta,
+		Gamma
+	}
 
 	[DataContract]
 	public class SecretObject

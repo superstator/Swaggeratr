@@ -15,6 +15,26 @@ namespace Swaggerator
 	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 	public class Discoverator : IDiscoverator
 	{
+		/// <summary>
+		/// Gets a new instance of the core Discoverator service
+		/// </summary>
+		public Discoverator()
+		{
+			string sectionName = "swagger";
+			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection(sectionName) ?? new Configuration.SwaggerSection());
+			HiddenTags = config.Tags.OfType<Configuration.TagElement>().Where(t => t.Visibile.Equals(false)).Select(t => t.Name);
+			_Serializer = new Serializer(HiddenTags);
+		}
+
+		internal Discoverator(IEnumerable<string> hiddenTags)
+		{
+			HiddenTags = hiddenTags;
+			_Serializer = new Serializer(HiddenTags);
+		}
+
+		internal readonly IEnumerable<string> HiddenTags;
+		private readonly Serializer _Serializer;
+
 		public Stream GetServices()
 		{
 			return GetServices(AppDomain.CurrentDomain);
@@ -58,7 +78,7 @@ namespace Swaggerator
 			{
 				types = assembly.DefinedTypes;
 			}
-			catch (ReflectionTypeLoadException ex)
+			catch (ReflectionTypeLoadException)
 			{
 				//couldn't load this assembly - probably a non-issue
 				yield break;
@@ -108,7 +128,7 @@ namespace Swaggerator
 
 			Stack<Type> typeStack = new Stack<Type>();
 
-			string api = Serializers.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
+			string api = _Serializer.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
 
 			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
 			return ms;

@@ -59,9 +59,14 @@
     <Compile Include="Attributes\OperationSummaryAttribute.cs" />
     <Compile Include="Attributes\ResponseCodeAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
+    <Compile Include="Attributes\TagAttribute.cs" />
+    <Compile Include="Configuration\SwaggerSection.cs" />
+    <Compile Include="Configuration\TagCollection.cs" />
+    <Compile Include="Configuration\TagElement.cs" />
     <Compile Include="Discoverator.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IDiscoverator.cs" />
+    <Compile Include="Mapper.cs" />
     <Compile Include="Models\Method.cs" />
     <Compile Include="Models\Operation.cs" />
     <Compile Include="Models\Parameter.cs" />
@@ -70,8 +75,7 @@
     <Compile Include="Models\ServiceList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers.cs" />
-    <Compile Include="Mappers.cs" />
-    <Compile Include="Serializers.cs" />
+    <Compile Include="Serializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
