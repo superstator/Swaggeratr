@@ -27,8 +27,8 @@ namespace Swaggerator
 			if (type == typeof(string)) { return "string"; }
 			if (type == typeof(DateTime)) { return "Date"; }
 
-            //it's an enum, use string as the property type and enum values will be serialized later
-            if (type.IsEnum) { return "string"; }
+			//it's an enum, use string as the property type and enum values will be serialized later
+			if (type.IsEnum) { return "string"; }
 
 			//it's a collection/array, so it will use the swagger "container" syntax
 			if (type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
@@ -78,6 +78,11 @@ namespace Swaggerator
 
 			Type elementType = enumType.GetGenericArguments().First();
 			return MapSwaggerType(elementType, typeStack);
+		}
+
+		internal static bool TagIsHidden(this Dictionary<string, Configuration.TagElement> tagConfigurations, IEnumerable<string> itemTags)
+		{
+			return tagConfigurations.Values.Any(t => t.Visibile.Equals(false) && itemTags.Contains(t.Name));
 		}
 	}
 }
