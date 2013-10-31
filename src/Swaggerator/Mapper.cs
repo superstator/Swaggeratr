@@ -170,7 +170,7 @@ namespace Swaggerator
 			return methodInfo.GetCustomAttributes<ResponseCodeAttribute>().Select(rca => new ResponseCode
 			{
 				code = rca.Code,
-				reason = rca.Description
+				message = rca.Description
 			});
 		}
 	}

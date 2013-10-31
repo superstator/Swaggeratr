@@ -14,6 +14,6 @@ namespace Swaggerator.Models
         public int code { get; set; }
 
         [DataMember]
-        public string reason { get; set; }
+        public string message { get; set; }
     }
 }
