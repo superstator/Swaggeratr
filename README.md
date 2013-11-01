@@ -49,7 +49,19 @@ If you want more finegrained control of display things, you can use the ```[Tag(
 
 Meanwhile on your dev server, you'd set the visible property of the "InternalUse" tag to true, or leave it out of the config entirely. Note this does not prevent users accessing those methods if they aren't properly secured - it only prevents documentation for them being generated.
 
-There are some other attributes that may come in handy as well, like ```[OperationSummary]```, or ```[ResponseCode]```. Play around with it - you probably won't break anything.
+### Markup
+
+There are some other attributes that may come in handy as well, to add details to your documentation or to override default assumptions Swaggerator makes.
+
+```[OperationSummary]``` lets you set a summary string for a service method. In swagger-ui, these are displayed alongside the method url, before the method details have been expanded.
+
+```[OperationNotes]``` lets you set a longer string describing a service method. In swagger-ui these are displayed after clicking to expand a method.
+
+```[ResponseCode]``` lets you enumerate the various codes your method may return. An optional string gives details, i.e. "409 - Username is already taken"
+
+```[ParameterSettings]``` let you specifiy exactly how a method parameter works. By default swagger assumes all path parameters are required strings, all body parameters are required and typed, and all query parameters are optional string. Using parameter settings you can specify that a given query param is required, or that a path parameter should be an integer, etc.
+
+Attributes applied to the method implementation will override attributes applied to the method declaration.
 
 ### That's it!
 
