@@ -42,9 +42,9 @@ namespace SampleService
         }
 
 
-        public string PutData(string value, string anothervalue)
+        public string PutData(string value, string anothervalue, string optionalvalue)
         {
-            return value + anothervalue;
+            return value + anothervalue + optionalvalue;
         }
 
         public CompositeType[] GetList()

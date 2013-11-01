@@ -37,8 +37,16 @@ namespace Swaggerator.Test
 			var tres = operation.parameters.First(p => p.name.Equals("tRes"));
 
 			Assert.AreEqual("query", uno.paramType);
+			Assert.AreEqual(true, uno.required);
+			Assert.IsTrue(string.IsNullOrEmpty(uno.description));
+
 			Assert.AreEqual("query", dos.paramType);
+			Assert.AreEqual(false, dos.required);
+			Assert.AreEqual("integer", dos.type);
+
 			Assert.AreEqual("query", tres.paramType);
+			Assert.AreEqual(false, tres.required);
+			Assert.AreEqual("The third option.", tres.description);
 		}
 
 		[TestMethod]
@@ -73,7 +81,10 @@ namespace Swaggerator.Test
 		{
 			[Swaggerator.Attributes.OperationSummary("Short format"), Swaggerator.Attributes.OperationNotes("Long format")]
 			[System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
-			int Method(string uno, string dos, string thRee);
+			int Method(
+				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string uno,
+				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string dos, 
+				[Swaggerator.Attributes.ParameterSettings(Description = "The third option.")]string thRee);
 
 			[Swaggerator.Attributes.Tag("SecretThings")]
 			[Swaggerator.Attributes.ResponseCode(500, "Just because.")]
@@ -83,7 +94,7 @@ namespace Swaggerator.Test
 
 		class MapTest : IMapTest
 		{
-			public int Method(string uno, string dos, string tres) { throw new NotImplementedException(); }
+			public int Method(string uno, [Swaggerator.Attributes.ParameterSettings(IsRequired = false, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
 
 			public int SecretMethod() { throw new NotImplementedException(); }
 		}
