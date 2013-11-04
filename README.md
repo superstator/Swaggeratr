@@ -20,7 +20,7 @@ To make your service visible to the discovery service, add the ```[Swaggerated]`
 [Swaggerator.Attributes.Swaggerated("/rest","A RESTful WCF Service")]
 public class RESTful : IRESTful
 ```
-Note this is the service implementation, not the DataContract inferface. WCF allows for multiple implementations of a single contract, so you need to add the [Swaggerated] attribute to a specific implementation for Swaggerator to know exactly what it going on. Other attributes like ```[OperationSummary]``` or ```[ResponseCode]``` can be applied to either implementation or declaration.
+Note this is the service implementation, not the DataContract inferface. WCF allows for multiple implementations of a single contract, so you need to add the ```[Swaggerated]``` attribute to a specific implementation for Swaggerator to know exactly what it going on. Other attributes like ```[OperationSummary]``` or ```[ResponseCode]``` can be applied to either implementation or declaration.
 
 The first argument is required - it tells Swagger where your service is actually hosted within your project.
 
