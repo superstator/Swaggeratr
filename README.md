@@ -61,6 +61,8 @@ There are some other attributes that may come in handy as well, to add details t
 
 ```[ParameterSettings]``` let you specifiy exactly how a method parameter works. By default swagger assumes all path parameters are required strings, all body parameters are required and typed, and all query parameters are optional string. Using parameter settings you can specify that a given query param is required, or that a path parameter should be an integer, etc.
 
+```[Accepts]``` and ```[Produces]``` let you define the content-types your method will work with. By default Swaggerator will assume xml & json for all methods, but this will let you narrow to one specific format, or call out a streamed format like "image/jpg".
+
 Attributes applied to the method implementation will override attributes applied to the method declaration.
 
 ### That's it!

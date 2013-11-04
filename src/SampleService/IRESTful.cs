@@ -42,12 +42,14 @@ namespace SampleService
 
 		[OperationContract]
 		[WebInvoke(
-			UriTemplate = "/Data/{value}?val={anothervalue}&option={optionalvalue}",
-			Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+			 UriTemplate = "/Data/{value}?val={anothervalue}&option={optionalvalue}",
+			 Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
 		string PutData(string value, [ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")]string anothervalue,
-			[ParameterSettings(UnderlyingType = typeof(int))]string optionalvalue);
+			 [ParameterSettings(UnderlyingType = typeof(int))]string optionalvalue);
 
 		[OperationContract]
+		[Swaggerator.Attributes.Produces(ContentType = "application/xml")]
+		[Swaggerator.Attributes.Produces(ContentType = "application/customformat")]
 		[WebGet(UriTemplate = "/List")]
 		CompositeType[] GetList();
 	}

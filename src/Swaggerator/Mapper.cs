@@ -95,7 +95,7 @@ namespace Swaggerator
 
 				//if the method is marked Hidden anywhere, skip it
 				if (implementation.GetCustomAttribute<HiddenAttribute>() != null ||
-					 declaration.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
+					  declaration.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
 
 				//if a tag from either implementation or declaration is marked as not visible, skip it
 				var methodTags = implementation.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Concat(declaration.GetCustomAttributes<TagAttribute>().Select(t => t.TagName));
@@ -111,17 +111,16 @@ namespace Swaggerator
 
 				//implementation description overrides interface description
 				string description =
-					 Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(implementation, "Notes") ??
-					 Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(declaration, "Notes") ??
-					 Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(implementation, "Description") ??
-					 Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(declaration, "Description") ??
-					 "";
+					  Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(implementation, "Notes") ??
+					  Helpers.GetCustomAttributeValue<string, OperationNotesAttribute>(declaration, "Notes") ??
+					  Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(implementation, "Description") ??
+					  Helpers.GetCustomAttributeValue<string, DescriptionAttribute>(declaration, "Description") ??
+					  "";
 
 				string summary =
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(implementation, "Summary") ??
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
 				"";
-
 
 				Operation operation = new Operation
 				{
@@ -129,7 +128,9 @@ namespace Swaggerator
 					nickname = declaration.Name + httpMethod,
 					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(declaration.ReturnType, typeStack)),
 					summary = summary,
-					notes = description
+					notes = description,
+					accepts = new List<string>(GetContentTypes<AcceptsAttribute>(implementation, declaration)),
+					produces = new List<string>(GetContentTypes<ProducesAttribute>(implementation, declaration))
 				};
 				if (declaration.ReturnType.IsArray)
 				{
@@ -183,20 +184,36 @@ namespace Swaggerator
 					}
 
 
-					var settings = implementation.GetParameters().First(p => p.Position.Equals(parameter.Position)).GetCustomAttribute<ParameterSettings>() ??
-						parameter.GetCustomAttribute<Attributes.ParameterSettings>();
+					var settings = implementation.GetParameters().First(p => p.Position.Equals(parameter.Position)).GetCustomAttribute<ParameterSettingsAttribute>() ??
+						 parameter.GetCustomAttribute<Attributes.ParameterSettingsAttribute>();
 					if (settings != null)
 					{
 						parm.required = settings.IsRequired;
 						parm.description = settings.Description ?? parm.description;
 						parm.type = settings.UnderlyingType == null ? parm.type :
-							Helpers.MapSwaggerType(settings.UnderlyingType, typeStack);
+							 Helpers.MapSwaggerType(settings.UnderlyingType, typeStack);
 					}
 
 					operation.parameters.Add(parm);
 				}
 
 				yield return new Tuple<string, Operation>(uri.LocalPath, operation);
+			}
+		}
+
+		private IEnumerable<string> GetContentTypes<T>(MethodInfo implementation, MethodInfo declaration) where T : ContentTypeAttribute
+		{
+			if (implementation.GetCustomAttributes<T>().Any())
+			{
+				return implementation.GetCustomAttributes<T>().Select(a => a.ContentType);
+			}
+			else if (declaration.GetCustomAttributes<T>().Any())
+			{
+				return declaration.GetCustomAttributes<T>().Select(a => a.ContentType);
+			}
+			else
+			{
+				return new[] { "application/xml", "application/json" };
 			}
 		}
 
