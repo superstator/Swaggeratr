@@ -55,10 +55,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ContentTypeAttribute.cs" />
     <Compile Include="Attributes\HiddenAttribute.cs" />
     <Compile Include="Attributes\OperationNotesAttribute.cs" />
     <Compile Include="Attributes\OperationSummaryAttribute.cs" />
-    <Compile Include="Attributes\ParameterSettings.cs" />
+    <Compile Include="Attributes\ParameterSettingsAttribute.cs" />
     <Compile Include="Attributes\ResponseCodeAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
     <Compile Include="Attributes\TagAttribute.cs" />

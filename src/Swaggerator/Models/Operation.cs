@@ -13,6 +13,8 @@ namespace Swaggerator.Models
         {
             parameters = new List<Parameter>();
             errorResponses = new List<ResponseCode>();
+            accepts = new List<string>();
+            produces = new List<string>();
         }
 
         [DataMember]
@@ -31,6 +33,10 @@ namespace Swaggerator.Models
         public string notes { get; set; }
         [DataMember]
         public List<ResponseCode> errorResponses { get; set; }
+        [DataMember]
+        public List<string> accepts { get; set; }
+        [DataMember]
+        public List<string> produces { get; set; }
     }
 
     [DataContract]
