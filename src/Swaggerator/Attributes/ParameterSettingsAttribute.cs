@@ -14,7 +14,7 @@
  * limitations under the License.
  * 
  * 
- * ParameterSettings.cs : Attribute to override default properties of a method parameter.
+ * ParameterSettingsAttribute.cs : Attribute to override default properties of a method parameter.
  */
 
 using System;
@@ -22,7 +22,7 @@ using System;
 namespace Swaggerator.Attributes
 {
 	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-	public class ParameterSettings : Attribute
+	public class ParameterSettingsAttribute : Attribute
 	{
 		/// <summary>
 		/// Overrides default behavior for a method parameter.
@@ -30,7 +30,7 @@ namespace Swaggerator.Attributes
 		/// <param name="isRequired">Is the parameter required or optional for this method. Defaults to false (not required).</param>
 		/// <param name="underlyingType">What is the expected type for the parameter (int, bool, string, etc.)</param>
 		/// <param name="description">Descriptive text.</param>
-		public ParameterSettings(bool isRequired = false, Type underlyingType = null, string description = null)
+		public ParameterSettingsAttribute(bool isRequired = false, Type underlyingType = null, string description = null)
 		{
 			IsRequired = isRequired;
 			UnderlyingType = underlyingType;

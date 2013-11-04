@@ -14,15 +14,13 @@
  * limitations under the License.
  * 
  * 
- * ContentTypeAttribute.cs : Base class for Accepts/Produces attributes.
+ * ProducesAttribute.cs : Defines content-type produced by a method.
  */
 
 using System;
 
 namespace Swaggerator.Attributes
 {
-	public abstract class ContentTypeAttribute : Attribute
-	{
-		public string ContentType { get; set; }
-	}
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = true)]
+	public class ProducesAttribute : ContentTypeAttribute { }
 }

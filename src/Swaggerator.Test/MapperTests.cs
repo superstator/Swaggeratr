@@ -85,6 +85,24 @@ namespace Swaggerator.Test
 		}
 
 		[TestMethod]
+		public void CanMapContentTypes()
+		{
+			var mapper = new Mapper(null);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+
+			var operation = operations.First(o => o.Item1.Equals("/keepitsecret")).Item2;
+			Assert.AreEqual(1, operation.produces.Count);
+			Assert.AreEqual("application/xml", operation.produces[0]);
+
+			var operation2 = operations.First(o => o.Item1.Equals("/method/test")).Item2;
+			Assert.AreEqual(2, operation2.produces.Count);
+			Assert.IsTrue(operation2.produces.Contains("application/xml"));
+			Assert.IsTrue(operation2.produces.Contains("application/json"));
+		}
+
+		[TestMethod]
 		public void CanMapNotesAndSummary()
 		{
 			var mapper = new Mapper(null);
@@ -103,11 +121,12 @@ namespace Swaggerator.Test
 			[System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
 			int Method(
 				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string uno,
-				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string dos, 
+				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string dos,
 				[Swaggerator.Attributes.ParameterSettings(Description = "The third option.")]string thRee);
 
 			[Swaggerator.Attributes.Tag("SecretThings")]
 			[Swaggerator.Attributes.ResponseCode(500, "Just because.")]
+			[Swaggerator.Attributes.Produces(ContentType = "application/xml")]
 			[System.ServiceModel.Web.WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
 		}
