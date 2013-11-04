@@ -1,13 +1,28 @@
-﻿using Newtonsoft.Json;
+﻿/*
+ * Copyright (c) 2013 Digimarc Corporation
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * 
+ * Helpers.cs : Miscellaneous helper methods for reading type names, attribute values, etc.
+ */
+
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace Swaggerator
 {
@@ -40,24 +55,7 @@ namespace Swaggerator
 			if (!typeMap.Contains(type)) { typeMap.Push(type); }
 			return type.FullName;
 		}
-
-		//public static string GetTypeName(Type type, Stack<Type> typeMap)
-		//{
-		//	if (type.IsArray)
-		//	{
-		//		string elementType = MapSwaggerType(type.GetElementType(), typeMap);
-		//		return elementType + "[]";
-		//	}
-
-		//	if (type.IsGenericType)
-		//	{
-		//		string genericArgs = string.Join(", ", type.GenericTypeArguments.Select(t => MapSwaggerType(t, typeMap)));
-		//		return _GenericTypeRegex.Replace(type.FullName, string.Format("$1<{0}>", genericArgs));
-		//	}
-
-		//	return type.FullName;
-		//}
-
+		
 		public static T1 GetCustomAttributeValue<T1, T2>(MethodInfo method, string propertyName)
 			where T1 : class
 			where T2 : Attribute
