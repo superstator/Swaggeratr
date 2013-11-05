@@ -19,11 +19,15 @@
 
 
 using System;
+using System.ServiceModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Web;
 using System.Linq;
+using Swaggerator.Attributes;
+using System.Runtime.Serialization;
+
 
 namespace Swaggerator.Test
 {
@@ -117,5 +121,49 @@ namespace Swaggerator.Test
 			Assert.IsNull(obj["properties"]["Secret"]);
 		}
 
+		[TestMethod]
+		public void CanHideTaggedTypes()
+		{
+			var typeStack = new Stack<Type>();
+			typeStack.Push(typeof(ModelSampleA));
+			typeStack.Push(typeof(ModelSampleB));
+
+			//gets the Secret property when it's tag isn't configured
+			var serializerAll = new Serializer(null);
+
+			string modelAll = serializerAll.WriteModels(typeStack);
+			Assert.IsFalse(string.IsNullOrEmpty(modelAll));
+
+			var objAll = JObject.Parse(modelAll) as JObject;
+			Assert.AreEqual(2, objAll.Count);
+			Assert.AreEqual(0, typeStack.Count);
+
+			var serializerTags = new Serializer(new[] {"Test"});
+
+			typeStack.Push(typeof(ModelSampleA));
+			typeStack.Push(typeof(ModelSampleB));
+
+			string modelHidden = serializerTags.WriteModels(typeStack);
+			Assert.IsFalse(string.IsNullOrEmpty(modelHidden));
+			var objHidden = JObject.Parse(modelHidden) as JObject;
+			Assert.AreEqual(1, objHidden.Count);
+
+		}
+
+		[DataContract]
+		[Tag("Test")]
+		internal class ModelSampleA
+		{
+			[DataMember]
+			public string MyString { get; set; }
+		}
+
+		internal class ModelSampleB
+		{
+			public string MyString { get; set; }
+		}
+
 	}
+	
+
 }
