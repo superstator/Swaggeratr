@@ -25,7 +25,7 @@ namespace Swaggerator.Attributes
 	/// <summary>
 	/// Identifies a class/method/etc for swagger so that visibility can be controlled via configuration.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = true)]
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = true)]
 	public class TagAttribute : Attribute
 	{
 		public TagAttribute(string name)

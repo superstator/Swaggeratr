@@ -97,6 +97,7 @@ namespace Swaggerator
 				{
 					Type t = typeStack.Pop();
 					if (t.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
+					if (t.GetCustomAttributes<TagAttribute>().Select(tn => tn.TagName).Any(HiddenTags.Contains)) { continue; }
 					writer.WritePropertyName(t.FullName);
 					writer.WriteRawValue(WriteType(t, typeStack));
 				}
