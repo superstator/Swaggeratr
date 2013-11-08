@@ -213,7 +213,7 @@ namespace Swaggerator
 			}
 			else
 			{
-				return new[] { "application/xml", "application/json" };
+				return new[] { "application/json", "application/xml" };
 			}
 		}
 
