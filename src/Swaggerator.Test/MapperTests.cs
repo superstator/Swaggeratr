@@ -19,9 +19,11 @@
 
 
 using System;
+using System.ServiceModel.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using Swaggerator.Attributes;
 
 namespace Swaggerator.Test
 {
@@ -79,10 +81,32 @@ namespace Swaggerator.Test
 
 			var operation = operations.First(o => o.Item1.Equals("/keepitsecret")).Item2;
 
-			Assert.AreEqual(1, operation.errorResponses.Count());
-			Assert.AreEqual("Just because.", operation.errorResponses[0].message);
-			Assert.AreEqual(500, operation.errorResponses[0].code);
+			Assert.AreEqual(7, operation.errorResponses.Count());
+			Assert.AreEqual("OK", operation.errorResponses[0].message);
+			Assert.AreEqual(200, operation.errorResponses[0].code);
 		}
+
+
+		[TestMethod]public void CanSortResponseCodes()
+		{
+			var mapper = new Mapper(null);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+
+			var operation = operations.First(o => o.Item1.Equals("/keepitsecret")).Item2;
+
+			Assert.AreEqual(7, operation.errorResponses.Count());
+
+			var lastIndex = operation.errorResponses.Count() - 1;
+			for (int i = 0; i < lastIndex; i++)
+			{
+				if (i == (lastIndex - 1))
+					break;
+				Assert.IsTrue(operation.errorResponses[i].code < operation.errorResponses[i + 1].code);
+			}
+		}
+
 
 		[TestMethod]
 		public void CanMapContentTypes()
@@ -117,23 +141,29 @@ namespace Swaggerator.Test
 
 		interface IMapTest
 		{
-			[Swaggerator.Attributes.OperationSummary("Short format"), Swaggerator.Attributes.OperationNotes("Long format")]
-			[System.ServiceModel.Web.WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
+			[OperationSummary("Short format"), OperationNotes("Long format")]
+			[WebGet(UriTemplate = "/method/test?uno={uno}&dos={dos}&tRes={thRee}")]
 			int Method(
-				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string uno,
-				[Swaggerator.Attributes.ParameterSettings(IsRequired = true)]string dos,
-				[Swaggerator.Attributes.ParameterSettings(Description = "The third option.")]string thRee);
+				[ParameterSettings(IsRequired = true)]string uno,
+				[ParameterSettings(IsRequired = true)]string dos,
+				[ParameterSettings(Description = "The third option.")]string thRee);
 
-			[Swaggerator.Attributes.Tag("SecretThings")]
-			[Swaggerator.Attributes.ResponseCode(500, "Just because.")]
-			[Swaggerator.Attributes.Produces(ContentType = "application/xml")]
-			[System.ServiceModel.Web.WebGet(UriTemplate = "/keepitsecret")]
+			[Tag("SecretThings")]
+			[ResponseCode(500, "Just because.")]
+			[ResponseCode(400, "Four hundred error")]
+			[ResponseCode(200, "OK")]
+			[ResponseCode(205, "Some error")]
+			[ResponseCode(404, "Not found")]
+			[ResponseCode(401, "Something weird happened")]
+			[ResponseCode(301, "Three O one Something weird happened")]
+			[Produces(ContentType = "application/xml")]
+			[WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
 		}
 
 		class MapTest : IMapTest
 		{
-			public int Method(string uno, [Swaggerator.Attributes.ParameterSettings(IsRequired = false, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
+			public int Method(string uno, [ParameterSettings(IsRequired = false, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
 
 			public int SecretMethod() { throw new NotImplementedException(); }
 		}

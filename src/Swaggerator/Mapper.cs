@@ -223,7 +223,7 @@ namespace Swaggerator
 			{
 				code = rca.Code,
 				message = rca.Description
-			});
+			}).OrderBy(c => c.code);
 		}
 	}
 }

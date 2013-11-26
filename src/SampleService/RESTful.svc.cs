@@ -35,8 +35,6 @@ namespace SampleService
         }
 
         [Description("A detailed explanation of the fabulous things this method can do for you.")]
-        [ResponseCode(400)]
-        [ResponseCode(401, "Something weird happened")]
         public CompositeType GetDataUsingDataContract(CompositeType composite)
         {
             if (composite == null)
