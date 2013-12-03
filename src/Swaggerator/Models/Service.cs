@@ -22,7 +22,7 @@ using System.Runtime.Serialization;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	internal class Service
+	public sealed class Service
 	{
 		[DataMember]
 		public string path { get; set; }

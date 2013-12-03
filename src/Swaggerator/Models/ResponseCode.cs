@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 namespace Swaggerator.Models
 {
     [DataContract]
-    public class ResponseCode
+    public sealed class ResponseCode
     {
         [DataMember]
         public int code { get; set; }

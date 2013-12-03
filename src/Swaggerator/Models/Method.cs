@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 namespace Swaggerator.Models
 {
 	[DataContract]
-	internal class Method
+	public sealed class Method
 	{
 		public Method()
 		{

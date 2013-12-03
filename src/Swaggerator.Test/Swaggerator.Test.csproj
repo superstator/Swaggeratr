@@ -73,6 +73,14 @@
       <Project>{ab5d5efd-bf0c-4287-8371-c5bfc7cb7fc3}</Project>
       <Name>SampleService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Swaggerator.Attributes\Swaggerator.Attributes.csproj">
+      <Project>{73dac157-1157-4da0-89e9-4ed68b811728}</Project>
+      <Name>Swaggerator.Attributes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Swaggerator.WCF\Swaggerator.WCF.csproj">
+      <Project>{222ca2d0-ad61-4963-8be4-64d40b623c3f}</Project>
+      <Name>Swaggerator.WCF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Swaggerator\Swaggerator.csproj">
       <Project>{0ad6efbc-412f-4c0e-8e0a-0faf28151b55}</Project>
       <Name>Swaggerator</Name>

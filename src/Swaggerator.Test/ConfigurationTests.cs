@@ -32,10 +32,11 @@ namespace Swaggerator.Test
 		{
 			Discoverator discoverator = new Discoverator();
 
-			Assert.IsNotNull(discoverator.HiddenTags);
-			Assert.IsTrue(discoverator.HiddenTags.Count() == 1);
-			Assert.IsTrue(discoverator.HiddenTags.Contains("Foo"));
-			Assert.IsFalse(discoverator.HiddenTags.Contains("Bar"));
+            //Assert.IsNotNull(discoverator.HiddenTags);
+            //Assert.IsTrue(discoverator.HiddenTags.Count() == 1);
+            //Assert.IsTrue(discoverator.HiddenTags.Contains("Foo"));
+            //Assert.IsFalse(discoverator.HiddenTags.Contains("Bar"));
+            Assert.Fail();
 		}
 
 		[TestMethod]

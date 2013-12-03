@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 namespace Swaggerator.Models
 {
     [DataContract]
-    internal class Operation
+    public sealed class Operation
     {
         public Operation()
         {
@@ -56,7 +56,7 @@ namespace Swaggerator.Models
     }
 
     [DataContract]
-    internal class OperationItems
+    public sealed class OperationItems
     {
         [DataMember(Name = "$ref")]
         public string Ref { get; set; }
