@@ -32,7 +32,7 @@ namespace Swaggerator
 {
 	internal class Mapper
 	{
-		internal Mapper(IEnumerable<string> hiddenTags)
+		public Mapper(IEnumerable<string> hiddenTags)
 		{
 			HiddenTags = hiddenTags ?? new List<string>();
 		}
@@ -45,7 +45,7 @@ namespace Swaggerator
 		/// <param name="path">Base service path.</param>
 		/// <param name="serviceType">The implementation type to search.</param>
 		/// <param name="typeStack">Types to be documented in the models section.</param>
-		internal IEnumerable<Method> FindMethods(string path, Type serviceType, Stack<Type> typeStack)
+		public IEnumerable<Method> FindMethods(string path, Type serviceType, Stack<Type> typeStack)
 		{
 			List<Tuple<string, Operation>> operations = new List<Tuple<string, Operation>>();
 
