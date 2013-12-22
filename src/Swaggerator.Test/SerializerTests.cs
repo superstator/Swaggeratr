@@ -48,12 +48,13 @@ namespace Swaggerator.Test
 			var props = obj["properties"] as JObject;
 			Assert.IsNotNull(props);
 			Assert.IsTrue(props.HasValues);
-			Assert.AreEqual(4, props.Count);
+			Assert.AreEqual(5, props.Count);
 
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
 			Assert.AreEqual("string", props["EnumValue"]["type"]);
 			Assert.AreEqual(false, props["EnumValue"]["required"]);
+			Assert.AreEqual("integer(16)", props["ShortValue"]["type"]);
 		}
 
 		[TestMethod]

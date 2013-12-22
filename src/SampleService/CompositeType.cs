@@ -53,6 +53,9 @@ namespace SampleService
 
 		[DataMember]
 		public EnumType? EnumValue { get; set; }
+
+		[DataMember]
+		public short ShortValue { get; set; }
 	}
 
 	public enum EnumType

@@ -24,6 +24,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using Swaggerator.Attributes;
+using Swaggerator.Models;
 
 namespace Swaggerator.Test
 {
@@ -48,7 +49,7 @@ namespace Swaggerator.Test
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			Assert.AreEqual(1, operations.Count());
+			Assert.AreEqual(2, operations.Count());
 			Assert.AreEqual("/method/test", operations.First().Item1);
 			var operation = operations.First().Item2;
 
@@ -64,7 +65,7 @@ namespace Swaggerator.Test
 
 			Assert.AreEqual("query", dos.paramType);
 			Assert.AreEqual(false, dos.required);
-			Assert.AreEqual("integer", dos.type);
+			Assert.AreEqual("integer(32)", dos.type);
 
 			Assert.AreEqual("query", tres.paramType);
 			Assert.AreEqual(false, tres.required);
@@ -138,6 +139,60 @@ namespace Swaggerator.Test
 			Assert.AreEqual("Short format", operation.summary);
 			Assert.AreEqual("Long format", operation.notes);
 		}
+		
+		[TestMethod]
+		public void CanMapVoidOperation()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof (MapTest).GetInterfaceMap(typeof (IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/voidtest")).Item2;
+			Assert.IsNotNull(operation);
+			Assert.AreEqual("None",operation.type);
+		}
+
+		[TestMethod]
+		public void CanMapBuiltInParams()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/voidtest")).Item2;
+
+			Assert.AreEqual(15, operation.parameters.Count);
+			Assert.AreEqual("boolean", GetTypeFromParamList("bl", operation.parameters));
+			Assert.AreEqual("integer(8)", GetTypeFromParamList("bt", operation.parameters));
+			Assert.AreEqual("integer(8, signed)", GetTypeFromParamList("sbt", operation.parameters));
+			Assert.AreEqual("character", GetTypeFromParamList("ch", operation.parameters));
+			Assert.AreEqual("decimal", GetTypeFromParamList("dm", operation.parameters));
+			Assert.AreEqual("double", GetTypeFromParamList("db", operation.parameters));
+			Assert.AreEqual("float", GetTypeFromParamList("fl", operation.parameters));
+			Assert.AreEqual("integer(32)", GetTypeFromParamList("it", operation.parameters));
+			Assert.AreEqual("integer(32, unsigned)", GetTypeFromParamList("uit", operation.parameters));
+			Assert.AreEqual("integer(64)", GetTypeFromParamList("lg", operation.parameters));
+			Assert.AreEqual("integer(64, unsigned)", GetTypeFromParamList("ulg", operation.parameters));
+			Assert.AreEqual("integer(16)", GetTypeFromParamList("st", operation.parameters));
+			Assert.AreEqual("integer(16, unsigned)", GetTypeFromParamList("ust", operation.parameters));
+			Assert.AreEqual("string", GetTypeFromParamList("str", operation.parameters));
+			Assert.AreEqual("Date", GetTypeFromParamList("dt", operation.parameters));
+		}
+
+		[TestMethod]
+		public void CanHideParameter()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/hideparamtest")).Item2;
+			Assert.AreEqual(1, operation.parameters.Count);
+			Assert.AreEqual("foo", operation.parameters[0].name);
+			Assert.AreEqual("integer(32)", operation.parameters[0].type);
+		}
+
+		private string GetTypeFromParamList(string name, List<Parameter> parameters)
+		{
+			return (parameters.First(p => p.name.Equals(name))).type;
+		}
 
 		interface IMapTest
 		{
@@ -159,6 +214,27 @@ namespace Swaggerator.Test
 			[Produces(ContentType = "application/xml")]
 			[WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
+
+			[WebInvoke(Method = "DELETE", UriTemplate = "/voidtest")]
+			void VoidMethod(
+				bool bl, 
+				byte bt, 
+				sbyte sbt, 
+				char ch, 
+				decimal dm,
+				double db,
+				float fl,
+				int it,
+				uint uit,
+				long lg,
+				ulong ulg,
+				short st,
+				ushort ust,
+				string str,
+				DateTime dt);
+
+			[WebGet(UriTemplate = "/hideparamtest")]
+			int HideParamTest(int foo, [ParameterSettings(Hidden = true)]string bar);
 		}
 
 		class MapTest : IMapTest
@@ -166,6 +242,28 @@ namespace Swaggerator.Test
 			public int Method(string uno, [ParameterSettings(IsRequired = false, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
 
 			public int SecretMethod() { throw new NotImplementedException(); }
+
+			public void VoidMethod(
+				bool bl,
+				byte bt,
+				sbyte sbt,
+				char ch,
+				decimal dm,
+				double db,
+				float fl,
+				int it,
+				uint uit,
+				long lg,
+				ulong ulg,
+				short st,
+				ushort ust,
+				string str,
+				DateTime dt)
+			{
+				throw new NotImplementedException();
+			}
+
+			public int HideParamTest(int foo, string bar) { throw new NotImplementedException();}
 		}
 	}
 }
