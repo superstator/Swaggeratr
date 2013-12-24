@@ -30,15 +30,18 @@ namespace Swaggerator.Attributes
 		/// <param name="isRequired">Is the parameter required or optional for this method. Defaults to false (not required).</param>
 		/// <param name="underlyingType">What is the expected type for the parameter (int, bool, string, etc.)</param>
 		/// <param name="description">Descriptive text.</param>
-		public ParameterSettingsAttribute(bool isRequired = false, Type underlyingType = null, string description = null)
+		/// <param name="hidden">Should be parameter be hidden for this method? Defaults to false.</param>
+		public ParameterSettingsAttribute(bool isRequired = false, Type underlyingType = null, string description = null, bool hidden = false)
 		{
 			IsRequired = isRequired;
 			UnderlyingType = underlyingType;
 			Description = description;
+			Hidden = hidden;
 		}
 
 		public bool IsRequired { get; set; }
 		public Type UnderlyingType { get; set; }
 		public string Description { get; set; }
+		public bool Hidden { get; set; }
 	}
 }

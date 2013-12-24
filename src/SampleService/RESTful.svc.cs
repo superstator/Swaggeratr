@@ -17,6 +17,7 @@
  * RESTful.svc.cs : Sample service implementation
  */
 
+using System.Web.Services.Description;
 using Swaggerator.Attributes;
 using System;
 using System.Collections.Generic;
@@ -72,5 +73,15 @@ namespace SampleService
 				new CompositeType { Secret=new SecretObject { SecretData="WHAT?!" } }
 			};
         }
+
+	    public void Delete(string value)
+	    {
+		    
+	    }
+
+	    public int HideOneOfTwoParams(int foo, object bar)
+	    {
+		    return foo;
+	    }
     }
 }
