@@ -42,36 +42,21 @@ namespace SampleService
 		[ResponseCode(401, "Something weird happened")]
 		[ResponseCode(301, "Three O one Something weird happened")]
 		[OperationContract]
-		[WebInvoke(UriTemplate = "/data", Method = "POST", RequestFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Bare)]
+		[WebInvoke(UriTemplate = "/data", Method = "POST", RequestFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
 		CompositeType GetDataUsingDataContract(CompositeType composite);
 
 		[OperationContract]
 		[WebInvoke(
-			UriTemplate = "/Data/{value}?val={anothervalue}&option={optionalvalue}",
-			Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Bare)]
-		string PutData(string value,
-			[ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")] string anothervalue,
-			[ParameterSettings(UnderlyingType = typeof (int))] string optionalvalue);
+			 UriTemplate = "/Data/{value}?val={anothervalue}&option={optionalvalue}",
+			 Method = "PUT", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare)]
+		string PutData(string value, [ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")]string anothervalue,
+			 [ParameterSettings(UnderlyingType = typeof(int))]string optionalvalue);
 
 		[OperationContract]
 		[Swaggerator.Attributes.Produces(ContentType = "application/xml")]
 		[Swaggerator.Attributes.Produces(ContentType = "application/customformat")]
 		[WebGet(UriTemplate = "/List")]
 		CompositeType[] GetList();
-
-		[OperationContract]
-		[WebInvoke(UriTemplate = "/Data/{value}",
-			Method = "DELETE", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Bare)]
-		void Delete(string value);
-
-		[OperationContract]
-		[WebGet(UriTemplate = "/Data2/{value}")]
-		[OperationSummary("Example for hiding a parameter")]
-		[OperationNotes("The second parameter, object 'bar' is hidden")]
-		int HideOneOfTwoParams(int foo, [ParameterSettings(Hidden = true)]object bar);
 	}
 
 

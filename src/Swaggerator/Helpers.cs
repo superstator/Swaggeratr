@@ -33,24 +33,14 @@ namespace Swaggerator
 
 		public static string MapSwaggerType(Type type, Stack<Type> typeMap)
 		{
-			//built-in types
+			if (type == typeof(byte)) { return "byte"; }
 			if (type == typeof(bool)) { return "boolean"; }
-			if (type == typeof(byte)) { return "integer(8)"; }
-			if (type == typeof (sbyte)) { return "integer(8, signed)";}
-			if (type == typeof (char)) { return "character"; }
-			if (type == typeof(decimal)) { return "decimal"; }
-			if (type == typeof(double)) { return "double"; }
+			if (type == typeof(int)) { return "integer"; }
+			if (type == typeof(long)) { return "long"; }
 			if (type == typeof(float)) { return "float"; }
-			if (type == typeof(int)) { return "integer(32)"; }
-			if (type == typeof(uint)) { return "integer(32, unsigned)"; }
-			if (type == typeof(long)) { return "integer(64)"; }
-			if (type == typeof(ulong)) { return "integer(64, unsigned)"; }
-			if (type == typeof(short)) { return "integer(16)"; }
-			if (type == typeof(ushort)) { return "integer(16, unsigned)"; }
+			if (type == typeof(double)) { return "double"; }
 			if (type == typeof(string)) { return "string"; }
 			if (type == typeof(DateTime)) { return "Date"; }
-
-			if (type == typeof (void)) {return "None";}
 
 			//it's an enum, use string as the property type and enum values will be serialized later
 			if (type.IsEnum) { return "string"; }
