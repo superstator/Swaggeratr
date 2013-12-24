@@ -188,6 +188,9 @@ namespace Swaggerator
 						 parameter.GetCustomAttribute<Attributes.ParameterSettingsAttribute>();
 					if (settings != null)
 					{
+						if (settings.Hidden)
+							continue;
+
 						parm.required = settings.IsRequired;
 						parm.description = settings.Description ?? parm.description;
 						parm.type = settings.UnderlyingType == null ? parm.type :
