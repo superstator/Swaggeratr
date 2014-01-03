@@ -56,6 +56,10 @@ namespace SampleService
 
 		[DataMember]
 		public short ShortValue { get; set; }
+
+		[DataMember]
+		[MemberProperties(MaxLength = "10", Description = "Description text")]
+		public string StringValueWithLengthRestriction { get; set; }
 	}
 
 	public enum EnumType

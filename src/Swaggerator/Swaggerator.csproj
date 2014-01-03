@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Attributes\AcceptsAttribute.cs" />
     <Compile Include="Attributes\ContentTypeAttribute.cs" />
+    <Compile Include="Attributes\MemberPropertiesAttribute.cs" />
     <Compile Include="Attributes\HiddenAttribute.cs" />
     <Compile Include="Attributes\OperationNotesAttribute.cs" />
     <Compile Include="Attributes\OperationSummaryAttribute.cs" />

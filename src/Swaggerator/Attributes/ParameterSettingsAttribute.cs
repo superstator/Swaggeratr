@@ -31,17 +31,20 @@ namespace Swaggerator.Attributes
 		/// <param name="underlyingType">What is the expected type for the parameter (int, bool, string, etc.)</param>
 		/// <param name="description">Descriptive text.</param>
 		/// <param name="hidden">Should be parameter be hidden for this method? Defaults to false.</param>
-		public ParameterSettingsAttribute(bool isRequired = false, Type underlyingType = null, string description = null, bool hidden = false)
+		/// <param name="maxLength">What is the maximum allowed length of parameter, if defined</param>
+		public ParameterSettingsAttribute(bool isRequired = false, Type underlyingType = null, string description = null, bool hidden = false, string maxLength = null)
 		{
 			IsRequired = isRequired;
 			UnderlyingType = underlyingType;
 			Description = description;
 			Hidden = hidden;
+			MaxLength = maxLength;
 		}
 
 		public bool IsRequired { get; set; }
 		public Type UnderlyingType { get; set; }
 		public string Description { get; set; }
 		public bool Hidden { get; set; }
+		public string MaxLength { get; set; }
 	}
 }

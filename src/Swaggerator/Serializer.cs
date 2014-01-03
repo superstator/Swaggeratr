@@ -159,9 +159,21 @@ namespace Swaggerator
 
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
+				var memberProperties = pi.GetCustomAttribute<MemberPropertiesAttribute>();
+
 				writer.WriteStartObject();
+
 				writer.WritePropertyName("type");
-				writer.WriteValue(Helpers.MapSwaggerType(pType, typeStack));
+				if (pType == typeof (string))
+				{
+					if(memberProperties != null && memberProperties.MaxLength != null)
+					writer.WriteValue(string.Format("{0}({1})", Helpers.MapSwaggerType(pType, typeStack), memberProperties.MaxLength));
+				}
+				else
+				{
+					writer.WriteValue(Helpers.MapSwaggerType(pType, typeStack));
+				}
+
 				writer.WritePropertyName("required");
 				writer.WriteValue(required);
 
@@ -190,6 +202,17 @@ namespace Swaggerator
 					writer.WritePropertyName("description");
 					writer.WriteValue(description.Description);
 				}
+				else
+				{
+					if (memberProperties != null)
+					{
+						writer.WritePropertyName("description");
+						writer.WriteValue(memberProperties.Description);
+					}
+				}
+
+
+
 				writer.WriteEnd();
 			}
 			return sb.ToString();

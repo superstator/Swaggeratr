@@ -70,6 +70,7 @@ namespace Swaggerator.Test
 			Assert.AreEqual("query", tres.paramType);
 			Assert.AreEqual(false, tres.required);
 			Assert.AreEqual("The third option.", tres.description);
+			Assert.AreEqual("string(22)", tres.type);
 		}
 
 		[TestMethod]
@@ -189,6 +190,7 @@ namespace Swaggerator.Test
 			Assert.AreEqual("integer(32)", operation.parameters[0].type);
 		}
 
+
 		private string GetTypeFromParamList(string name, List<Parameter> parameters)
 		{
 			return (parameters.First(p => p.name.Equals(name))).type;
@@ -201,7 +203,7 @@ namespace Swaggerator.Test
 			int Method(
 				[ParameterSettings(IsRequired = true)]string uno,
 				[ParameterSettings(IsRequired = true)]string dos,
-				[ParameterSettings(Description = "The third option.")]string thRee);
+				[ParameterSettings(Description = "The third option.", MaxLength = "22")]string thRee);
 
 			[Tag("SecretThings")]
 			[ResponseCode(500, "Just because.")]
@@ -265,5 +267,6 @@ namespace Swaggerator.Test
 
 			public int HideParamTest(int foo, string bar) { throw new NotImplementedException();}
 		}
+
 	}
 }
