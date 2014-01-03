@@ -48,7 +48,7 @@ namespace Swaggerator.Test
 			var props = obj["properties"] as JObject;
 			Assert.IsNotNull(props);
 			Assert.IsTrue(props.HasValues);
-			Assert.AreEqual(5, props.Count);
+			Assert.AreEqual(6, props.Count);
 
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
@@ -151,11 +151,28 @@ namespace Swaggerator.Test
 
 		}
 
+
+		[TestMethod]
+		public void CanWriteMemberProperties()
+		{
+			var serializer = new Serializer(null);
+			var model = serializer.WriteType(typeof(ModelSampleA), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(model));
+			var obj = JObject.Parse(model);
+			var container = obj["properties"]["MyString"];
+			Assert.IsNotNull(container);
+			Assert.AreEqual("string(10)", container["type"]);
+			Assert.AreEqual("my string description", container["description"]);
+		}
+
+
+
 		[DataContract]
 		[Tag("Test")]
 		internal class ModelSampleA
 		{
 			[DataMember]
+			[MemberProperties(MaxLength = "10", Description = "my string description")]
 			public string MyString { get; set; }
 		}
 
