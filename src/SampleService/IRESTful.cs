@@ -18,11 +18,9 @@
  */
 
 using Swaggerator.Attributes;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.ComponentModel;
-using System.Collections.Generic;
+
 
 namespace SampleService
 {
@@ -53,7 +51,8 @@ namespace SampleService
 			BodyStyle = WebMessageBodyStyle.Bare)]
 		string PutData(string value,
 			[ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")] string anothervalue,
-			[ParameterSettings(UnderlyingType = typeof (int))] string optionalvalue);
+			[ParameterSettings(UnderlyingType = typeof (int))] string optionalvalue, 
+			[ParameterSettings(MaxLength = "123")] string valueWithLengthRequirement);
 
 		[OperationContract]
 		[Swaggerator.Attributes.Produces(ContentType = "application/xml")]
