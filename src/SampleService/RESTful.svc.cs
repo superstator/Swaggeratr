@@ -17,7 +17,6 @@
  * RESTful.svc.cs : Sample service implementation
  */
 
-using System.Threading;
 using System.Web.Services.Description;
 using Swaggerator.Attributes;
 using System;
@@ -84,16 +83,5 @@ namespace SampleService
 	    {
 		    return foo;
 	    }
-
-	    public IAsyncResult BeginServiceAsyncMethod(string msg, AsyncCallback callback, object asyncState)
-	    {
-		    return null;
-	    }
-
-	    public CompositeType EndServiceAsyncMethod(IAsyncResult result)
-	    {
-		    return new CompositeType();
-	    }
-		
     }
 }

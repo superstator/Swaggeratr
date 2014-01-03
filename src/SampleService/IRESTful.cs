@@ -17,7 +17,6 @@
  * IRESTful.cs : Sample service declaration showing multiple methods, with summary and notes attributes
  */
 
-using System;
 using Swaggerator.Attributes;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -72,18 +71,7 @@ namespace SampleService
 		[WebGet(UriTemplate = "/Data2/{value}")]
 		[OperationSummary("Example for hiding a parameter")]
 		[OperationNotes("The second parameter, object 'bar' is hidden")]
-		int HideOneOfTwoParams(int value, [ParameterSettings(Hidden = true)]object bar);
-
-
-		[WebGet(UriTemplate = "/Data2Asynch/{value}")]
-		[OperationSummary("Example for hiding parameters and overriding return type")]
-		[OperationNotes("Two parameters, AsynchCallback callback and object asyncState are hidden")]
-		[OverrideReturnType(Type = typeof(CompositeType))]
-		[OperationContractAttribute(AsyncPattern = true)]
-		IAsyncResult BeginServiceAsyncMethod(string value, [ParameterSettings(Hidden = true)]AsyncCallback callback, [ParameterSettings(Hidden = true)]object asyncState);
-
-		// Note: There is no OperationContractAttribute for the end method.
-		CompositeType EndServiceAsyncMethod(IAsyncResult result);
+		int HideOneOfTwoParams(int foo, [ParameterSettings(Hidden = true)]object bar);
 	}
 
 

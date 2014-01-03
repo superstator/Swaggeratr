@@ -122,16 +122,11 @@ namespace Swaggerator
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
 				"";
 
-				var returnType =
-					Helpers.GetCustomAttributeValue<Type, OverrideReturnTypeAttribute>(implementation, "Type") ??
-					Helpers.GetCustomAttributeValue<Type, OverrideReturnTypeAttribute>(declaration, "Type") ??
-					declaration.ReturnType;
-
 				Operation operation = new Operation
 				{
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
-					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(returnType, typeStack)),
+					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(declaration.ReturnType, typeStack)),
 					summary = summary,
 					notes = description,
 					accepts = new List<string>(GetContentTypes<AcceptsAttribute>(implementation, declaration)),
