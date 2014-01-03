@@ -25,6 +25,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Web;
 using System.Linq;
+using SampleService;
 using Swaggerator.Attributes;
 using System.Runtime.Serialization;
 
@@ -151,6 +152,19 @@ namespace Swaggerator.Test
 
 		}
 
+		//[TestMethod]
+		//public void CanOverrideReturnTypes()
+		//{
+		//	var typeStack = new Stack<Type>();
+		//	typeStack.Push(typeof(OverrideReturnTypeTest));
+		//	var serializer = new Serializer(null);
+		//	string typeAll = serializer.WriteType(typeof(OverrideReturnTypeTest), new Stack<Type>());
+		//	Assert.IsFalse(string.IsNullOrEmpty(typeAll));
+		//	var obj = JObject.Parse(typeAll);
+		//	Assert.AreEqual(1, obj.Count);
+		//}
+
+
 		[DataContract]
 		[Tag("Test")]
 		internal class ModelSampleA
@@ -162,6 +176,17 @@ namespace Swaggerator.Test
 		internal class ModelSampleB
 		{
 			public string MyString { get; set; }
+		}
+
+		[ServiceContract]
+		internal class OverrideReturnTypeTest
+		{
+			[OperationContract]
+			[OverrideReturnType(Type = typeof(CompositeType))]
+			public int TestMethod()
+			{
+				return 0;
+			}
 		}
 
 	}
