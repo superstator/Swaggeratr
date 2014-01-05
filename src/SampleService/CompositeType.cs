@@ -58,7 +58,7 @@ namespace SampleService
 		public short ShortValue { get; set; }
 
 		[DataMember]
-		[MemberProperties(MaxLength = "10", Description = "Description text")]
+		[MemberProperties(TypeSizeNote = "10", Description = "Description text")]
 		public string StringValueWithLengthRestriction { get; set; }
 	}
 

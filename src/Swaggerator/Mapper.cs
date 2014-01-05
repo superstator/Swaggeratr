@@ -193,9 +193,9 @@ namespace Swaggerator
 
 						parm.required = settings.IsRequired;
 						parm.description = settings.Description ?? parm.description;
-						parm.type = settings.UnderlyingType == null ? parm.type :
-							 Helpers.MapSwaggerType(settings.UnderlyingType, typeStack);
-						parm.type = settings.MaxLength == null ? parm.type : string.Format("{0}({1})", parm.type, settings.MaxLength);
+						parm.type = settings.UnderlyingType == null 
+							? HttpUtility.HtmlEncode(Helpers.MapSwaggerType(parameter.ParameterType, typeStack, settings.TypeSizeNote))
+							: HttpUtility.HtmlEncode(Helpers.MapSwaggerType(settings.UnderlyingType, typeStack, settings.TypeSizeNote));
 					}
 
 					operation.parameters.Add(parm);
