@@ -164,15 +164,9 @@ namespace Swaggerator
 				writer.WriteStartObject();
 
 				writer.WritePropertyName("type");
-				if (pType == typeof (string))
-				{
-					if(memberProperties != null && memberProperties.MaxLength != null)
-					writer.WriteValue(string.Format("{0}({1})", Helpers.MapSwaggerType(pType, typeStack), memberProperties.MaxLength));
-				}
-				else
-				{
-					writer.WriteValue(Helpers.MapSwaggerType(pType, typeStack));
-				}
+				writer.WriteValue(memberProperties != null
+					? Helpers.MapSwaggerType(pType, typeStack, memberProperties.TypeSizeNote)
+					: Helpers.MapSwaggerType(pType, typeStack));
 
 				writer.WritePropertyName("required");
 				writer.WriteValue(required);

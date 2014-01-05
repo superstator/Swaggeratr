@@ -163,6 +163,14 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(container);
 			Assert.AreEqual("string(10)", container["type"]);
 			Assert.AreEqual("my string description", container["description"]);
+
+			var anotherSerializer = new Serializer(null);
+			var sampleBModelSerialized = anotherSerializer.WriteType(typeof (ModelSampleC), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(sampleBModelSerialized));
+			var sbObj = JObject.Parse(sampleBModelSerialized);
+			var sbContainer = sbObj["properties"]["MyString2"];
+			Assert.IsNotNull(sbContainer);
+			Assert.AreEqual("string", sbContainer["type"]);
 		}
 
 
@@ -172,13 +180,20 @@ namespace Swaggerator.Test
 		internal class ModelSampleA
 		{
 			[DataMember]
-			[MemberProperties(MaxLength = "10", Description = "my string description")]
+			[MemberProperties(TypeSizeNote = "10", Description = "my string description")]
 			public string MyString { get; set; }
 		}
 
 		internal class ModelSampleB
 		{
 			public string MyString { get; set; }
+		}
+
+		[DataContract]
+		internal class ModelSampleC
+		{
+			[DataMember]
+			public string MyString2 { get; set; }
 		}
 
 	}

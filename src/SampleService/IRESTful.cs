@@ -52,7 +52,7 @@ namespace SampleService
 		string PutData(string value,
 			[ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")] string anothervalue,
 			[ParameterSettings(UnderlyingType = typeof (int))] string optionalvalue, 
-			[ParameterSettings(MaxLength = "123")] string valueWithLengthRequirement);
+			[ParameterSettings(TypeSizeNote = "123")] string valueWithLengthRequirement);
 
 		[OperationContract]
 		[Swaggerator.Attributes.Produces(ContentType = "application/xml")]

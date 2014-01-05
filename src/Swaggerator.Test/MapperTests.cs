@@ -203,7 +203,7 @@ namespace Swaggerator.Test
 			int Method(
 				[ParameterSettings(IsRequired = true)]string uno,
 				[ParameterSettings(IsRequired = true)]string dos,
-				[ParameterSettings(Description = "The third option.", MaxLength = "22")]string thRee);
+				[ParameterSettings(Description = "The third option.", TypeSizeNote = "22")]string thRee);
 
 			[Tag("SecretThings")]
 			[ResponseCode(500, "Just because.")]

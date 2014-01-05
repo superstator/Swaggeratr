@@ -31,24 +31,24 @@ namespace Swaggerator
 		private static readonly Regex _GenericTypeRegex = new Regex("^(.*)`.*");
 
 
-		public static string MapSwaggerType(Type type, Stack<Type> typeMap)
+		public static string MapSwaggerType(Type type, Stack<Type> typeMap, string typeNote = null)
 		{
 			//built-in types
-			if (type == typeof(bool)) { return "boolean"; }
-			if (type == typeof(byte)) { return "integer(8)"; }
-			if (type == typeof (sbyte)) { return "integer(8, signed)";}
-			if (type == typeof (char)) { return "character"; }
-			if (type == typeof(decimal)) { return "decimal"; }
-			if (type == typeof(double)) { return "double"; }
-			if (type == typeof(float)) { return "float"; }
-			if (type == typeof(int)) { return "integer(32)"; }
-			if (type == typeof(uint)) { return "integer(32, unsigned)"; }
-			if (type == typeof(long)) { return "integer(64)"; }
-			if (type == typeof(ulong)) { return "integer(64, unsigned)"; }
-			if (type == typeof(short)) { return "integer(16)"; }
-			if (type == typeof(ushort)) { return "integer(16, unsigned)"; }
-			if (type == typeof(string)) { return "string"; }
-			if (type == typeof(DateTime)) { return "Date"; }
+			if (type == typeof (bool)) {return BuildTypeString("boolean", typeNote);}
+			if (type == typeof(byte)) { return BuildTypeString("integer", "8", typeNote); }
+			if (type == typeof (sbyte)) { return BuildTypeString("integer", "8, signed", typeNote);}
+			if (type == typeof (char)) { return BuildTypeString("character", typeNote); }
+			if (type == typeof(decimal)) { return BuildTypeString("decimal", typeNote); }
+			if (type == typeof(double)) { return BuildTypeString("double", typeNote); }
+			if (type == typeof(float)) { return BuildTypeString("float", typeNote); }
+			if (type == typeof(int)) { return BuildTypeString("integer", "32", typeNote); }
+			if (type == typeof(uint)) { return BuildTypeString("integer", "32, unsigned", typeNote); }
+			if (type == typeof(long)) { return BuildTypeString("integer", "64", typeNote); }
+			if (type == typeof(ulong)) { return BuildTypeString("integer", "64, unsigned", typeNote); }
+			if (type == typeof(short)) { return BuildTypeString("integer", "16", typeNote); }
+			if (type == typeof(ushort)) { return BuildTypeString("integer", "16, unsigned", typeNote); }
+			if (type == typeof(string)) { return BuildTypeString("string", typeNote); }
+			if (type == typeof(DateTime)) { return BuildTypeString("Date", typeNote); }
 
 			if (type == typeof (void)) {return "None";}
 
@@ -64,6 +64,18 @@ namespace Swaggerator
 			//it's a complex type, so we'll need to map it later
 			if (!typeMap.Contains(type)) { typeMap.Push(type); }
 			return type.FullName;
+		}
+
+		private static string BuildTypeString(string typeName, string defaultNote = null, string typeNote = null)
+		{
+			const string resultFormat = "{0}({1})";
+				
+			if (string.IsNullOrEmpty(defaultNote) && string.IsNullOrEmpty(typeNote))
+				return typeName;
+
+			return string.IsNullOrEmpty(typeNote) 
+				? string.Format(resultFormat, typeName, defaultNote)
+				: string.Format(resultFormat, typeName, typeNote);
 		}
 		
 		public static T1 GetCustomAttributeValue<T1, T2>(MethodInfo method, string propertyName)

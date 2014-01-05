@@ -25,13 +25,18 @@ namespace Swaggerator.Attributes
 	[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 	public class MemberPropertiesAttribute : Attribute
 	{
-		public MemberPropertiesAttribute(string maxLength = null, string description = null)
+		/// <summary>
+		/// Attribute used to specify properties of a DataMeber
+		/// </summary>
+		/// <param name="typeSizeNote">Summary for data type size/range, usally in numbers.</param>
+		/// <param name="description">Description for a DataMember</param>
+		public MemberPropertiesAttribute(string typeSizeNote = null, string description = null)
 		{
-			MaxLength = maxLength;
+			TypeSizeNote = typeSizeNote;
 			Description = description;
 		}
 
-		public string MaxLength { get; set; }
+		public string TypeSizeNote { get; set; }
 
 		public string Description { get; set; }
 	}
