@@ -49,7 +49,7 @@ namespace Swaggerator.Test
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			Assert.AreEqual(3, operations.Count());
+			Assert.AreEqual(4, operations.Count());
 			Assert.AreEqual("/method/test", operations.First().Item1);
 			var operation = operations.First().Item2;
 
@@ -190,6 +190,19 @@ namespace Swaggerator.Test
 			Assert.AreEqual("integer(32)", operation.parameters[0].type);
 		}
 
+		[TestMethod]
+		public void CanOverrideReturnType()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var realReturnType = map.InterfaceMethods.First(m => m.Name == "OverrideReturnTypeTest");
+			Assert.IsNotNull(realReturnType);
+			Assert.AreEqual(typeof(int), realReturnType.ReturnType);
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/overridereturntype")).Item2;
+			Assert.AreEqual("string", operation.type);
+		}
+
 
 		private string GetTypeFromParamList(string name, List<Parameter> parameters)
 		{
@@ -237,6 +250,10 @@ namespace Swaggerator.Test
 
 			[WebGet(UriTemplate = "/hideparamtest")]
 			int HideParamTest(int foo, [ParameterSettings(Hidden = true)]string bar);
+
+			[WebGet(UriTemplate = "/overridereturntype")]
+			[OverrideReturnType(typeof(string))]
+			int OverrideReturnTypeTest();
 		}
 
 		class MapTest : IMapTest
@@ -266,6 +283,9 @@ namespace Swaggerator.Test
 			}
 
 			public int HideParamTest(int foo, string bar) { throw new NotImplementedException();}
+
+			public int OverrideReturnTypeTest() { throw  new NotImplementedException();}
+
 		}
 
 	}

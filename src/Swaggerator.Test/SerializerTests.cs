@@ -19,7 +19,6 @@
 
 
 using System;
-using System.ServiceModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
@@ -151,14 +150,13 @@ namespace Swaggerator.Test
 
 		}
 
-
 		[TestMethod]
 		public void CanWriteMemberProperties()
 		{
 			var serializer = new Serializer(null);
-			var model = serializer.WriteType(typeof(ModelSampleA), new Stack<Type>());
-			Assert.IsFalse(string.IsNullOrEmpty(model));
-			var obj = JObject.Parse(model);
+			var type = serializer.WriteType(typeof(ModelSampleA), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(type));
+			var obj = JObject.Parse(type);
 			var container = obj["properties"]["MyString"];
 			Assert.IsNotNull(container);
 			Assert.AreEqual("string(10)", container["type"]);
@@ -172,7 +170,6 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(sbContainer);
 			Assert.AreEqual("string", sbContainer["type"]);
 		}
-
 
 
 		[DataContract]
@@ -195,7 +192,6 @@ namespace Swaggerator.Test
 			[DataMember]
 			public string MyString2 { get; set; }
 		}
-
 	}
 	
 
