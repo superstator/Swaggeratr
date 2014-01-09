@@ -83,6 +83,10 @@ namespace SampleService
 
 		// Note: There is no OperationContractAttribute for the end method.
 		CompositeType EndServiceAsyncMethod(IAsyncResult result);
+
+		[OperationContract]
+		[WebGet(UriTemplate = "/DisplayContractName")]
+		CustomDataContractSample DisplayDataContractNameInsteadOfClassName();
 	}
 
 

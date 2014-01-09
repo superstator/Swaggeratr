@@ -94,6 +94,11 @@ namespace SampleService
 	    {
 		    return new CompositeType();
 	    }
+
+	    public CustomDataContractSample DisplayDataContractNameInsteadOfClassName()
+	    {
+		    return new CustomDataContractSample();
+	    }
 		
     }
 }

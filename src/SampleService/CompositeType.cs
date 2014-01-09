@@ -75,4 +75,11 @@ namespace SampleService
 		[DataMember]
 		public string SecretData { get; set; }
 	}
+
+	[DataContract(Name = "CustomDataContractName")]
+	public class CustomDataContractSample
+	{
+		[DataMember(Name = "CustomDataMemberName")]
+		public string SampleString { get; set; }
+	}
 }
