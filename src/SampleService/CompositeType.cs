@@ -17,6 +17,7 @@
  * CompositeType.cs : Sample class demonstrating a complex model with tagged properties and multiple property types.
  */
 
+using System.Security.Cryptography.X509Certificates;
 using Swaggerator.Attributes;
 using System;
 using System.Collections.Generic;
@@ -76,13 +77,13 @@ namespace SampleService
 		public string SecretData { get; set; }
 	}
 
-	[DataContract(Name = "CustomDataContractName")]
+	[DataContract(Name = "MyDataContractName")]
 	public class CustomDataContractSample
 	{
-		[DataMember(Name = "CustomDataMemberOne")]
+		[DataMember(Name = "Foo")]
 		public string SampleString { get; set; }
 
-		[DataMember(Name = "CustomDatamemberTwo")]
+		[DataMember(Name = "Bar")]
 		public SubContractSample SampleMemberTwo { get; set; }
 	}
 
@@ -91,5 +92,19 @@ namespace SampleService
 	{
 		[DataMember(Name = "SubContractUserDefinedDataMemberName")]
 		public string SubContractSampleString { get; set; }
+	}
+
+	[DataContract(Name = "MyRequest")]
+	public class MyReqClass
+	{
+		[DataMember(Name = "MyRequesetMember")]
+		public string MyRespString { get; set; }
+	}
+
+	[DataContract(Name = "MyResonse")]
+	public class MyRespClass
+	{
+		[DataMember(Name = "MyResponseMember")]
+		public string MyReqString { get; set; }
 	}
 }

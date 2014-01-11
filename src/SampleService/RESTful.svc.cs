@@ -31,73 +31,78 @@ namespace SampleService
     [Swaggerated("/v1/rest", "A RESTful WCF Service")]
     public class RESTful : IRESTful
     {
-		 // public string GetData(string value)
-		 // {
-		 //	  return string.Format("You entered: {0}", value);
-		 // }
+		 public string GetData(string value)
+		 {
+			 return string.Format("You entered: {0}", value);
+		 }
 
-		 // [Description("A detailed explanation of the fabulous things this method can do for you.")]
-		 // public CompositeType GetDataUsingDataContract(CompositeType composite)
-		 // {
-		 //	  if (composite == null)
-		 //	  {
-		 //			throw new ArgumentNullException("composite");
-		 //	  }
-		 //	  if (composite.BoolValue)
-		 //	  {
-		 //			composite.StringValue += "Suffix";
-		 //			composite.Secret = new SecretObject { SecretData = "Boo!" };
-		 //	  }
-		 //	  return composite;
-		 // }
+		 [Description("A detailed explanation of the fabulous things this method can do for you.")]
+		 public CompositeType GetDataUsingDataContract(CompositeType composite)
+		 {
+			 if (composite == null)
+			 {
+				 throw new ArgumentNullException("composite");
+			 }
+			 if (composite.BoolValue)
+			 {
+				 composite.StringValue += "Suffix";
+				 composite.Secret = new SecretObject { SecretData = "Boo!" };
+			 }
+			 return composite;
+		 }
 
-		 // public CompositeType GetDataUsingDataContract(string composite)
-		 // {
-		 //	  return new CompositeType
-		 //	  {
-		 //			BoolValue = false,
-		 //			StringValue = "foobar"
-		 //	  };
-		 // }
+		 public CompositeType GetDataUsingDataContract(string composite)
+		 {
+			 return new CompositeType
+			 {
+				 BoolValue = false,
+				 StringValue = "foobar"
+			 };
+		 }
 
 
-		 // public string PutData(string value, string anothervalue, string optionalvalue, string valueWithLengthRequirement)
-		 // {
-		 //	  return value + anothervalue + optionalvalue + valueWithLengthRequirement;
-		 // }
+		 public string PutData(string value, string anothervalue, string optionalvalue, string valueWithLengthRequirement)
+		 {
+			 return value + anothervalue + optionalvalue + valueWithLengthRequirement;
+		 }
 
-		 // public CompositeType[] GetList()
-		 // {
-		 //	  return new[]
-		 //  {
-		 //	  new CompositeType { StringValue="Stuff" },
-		 //	  new CompositeType { Secret=new SecretObject { SecretData="WHAT?!" } }
-		 //  };
-		 // }
+		 public CompositeType[] GetList()
+		 {
+			 return new[]
+		   {
+		 	  new CompositeType { StringValue="Stuff" },
+		 	  new CompositeType { Secret=new SecretObject { SecretData="WHAT?!" } }
+		   };
+		 }
 
-		 //public void Delete(string value)
-		 //{
-		    
-		 //}
+		 public void Delete(string value)
+		 {
 
-		 //public int HideOneOfTwoParams(int foo, object bar)
-		 //{
-		 //	return foo;
-		 //}
+		 }
 
-		 //public IAsyncResult BeginServiceAsyncMethod(string msg, AsyncCallback callback, object asyncState)
-		 //{
-		 //	return null;
-		 //}
+		 public int HideOneOfTwoParams(int foo, object bar)
+		 {
+			 return foo;
+		 }
 
-		 //public CompositeType EndServiceAsyncMethod(IAsyncResult result)
-		 //{
-		 //	return new CompositeType();
-		 //}
+		 public IAsyncResult BeginServiceAsyncMethod(string msg, AsyncCallback callback, object asyncState)
+		 {
+			 return null;
+		 }
+
+		 public CompositeType EndServiceAsyncMethod(IAsyncResult result)
+		 {
+			 return new CompositeType();
+		 }
 
 	    public CustomDataContractSample DisplayDataContractNameInsteadOfClassName()
 	    {
 		    return new CustomDataContractSample();
+	    }
+
+	    public MyRespClass DisplayContractNameForRespAndReqTest(MyReqClass req)
+	    {
+			 return new MyRespClass();
 	    }
 		
     }

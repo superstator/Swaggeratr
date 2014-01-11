@@ -203,7 +203,6 @@ namespace Swaggerator.Test
 			var container = jObj["properties"]["CustomReturnType"];
 			Assert.IsNotNull(container);
 			Assert.AreEqual("ModelSampleReferenced", container["type"]);
-
 		}
 
 

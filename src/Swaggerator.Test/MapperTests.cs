@@ -49,7 +49,7 @@ namespace Swaggerator.Test
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			Assert.AreEqual(4, operations.Count());
+			Assert.AreEqual(6, operations.Count());
 			Assert.AreEqual("/method/test", operations.First().Item1);
 			var operation = operations.First().Item2;
 
@@ -203,6 +203,27 @@ namespace Swaggerator.Test
 			Assert.AreEqual("string", operation.type);
 		}
 
+		[TestMethod]
+		public void CanMapDataTypeAsDataContractName()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof (MapTest).GetInterfaceMap(typeof (IMapTest));
+			var testOperations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = testOperations.First(o => o.Item1.Equals("/customtypetest")).Item2;
+			Assert.AreEqual("MyDataContractName", operation.type);
+		}
+
+		[TestMethod]
+		public void CanOverrideParameterTypeWithDataContractName()
+		{
+			var mapper = new Mapper(null);
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var testOperations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = testOperations.First(o => o.Item1.Equals("/overrideparamtypeascustomtypetest")).Item2;
+			Assert.AreEqual(1, operation.parameters.Count);
+			Assert.AreEqual("MyRequest", GetTypeFromParamList("req", operation.parameters));
+		}
+
 
 		private string GetTypeFromParamList(string name, List<Parameter> parameters)
 		{
@@ -254,6 +275,13 @@ namespace Swaggerator.Test
 			[WebGet(UriTemplate = "/overridereturntype")]
 			[OverrideReturnType(typeof(string))]
 			int OverrideReturnTypeTest();
+
+			[WebGet(UriTemplate = "/customtypetest")]
+			SampleService.CustomDataContractSample CustomTypeTest();
+
+			[WebInvoke(UriTemplate = "/overrideparamtypeascustomtypetest", Method = "POST")]
+			SampleService.MyRespClass OverrideParamTypeAsCustomType([ParameterSettings(UnderlyingType=typeof(SampleService.MyReqClass))]string req);
+
 		}
 
 		class MapTest : IMapTest
@@ -286,7 +314,9 @@ namespace Swaggerator.Test
 
 			public int OverrideReturnTypeTest() { throw  new NotImplementedException();}
 
-		}
+			public SampleService.CustomDataContractSample CustomTypeTest(){throw new NotImplementedException();}
 
+			public SampleService.MyRespClass OverrideParamTypeAsCustomType(string req) { throw new NotImplementedException();}
+		}
 	}
 }
