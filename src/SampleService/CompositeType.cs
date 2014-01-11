@@ -79,7 +79,17 @@ namespace SampleService
 	[DataContract(Name = "CustomDataContractName")]
 	public class CustomDataContractSample
 	{
-		[DataMember(Name = "CustomDataMemberName")]
+		[DataMember(Name = "CustomDataMemberOne")]
 		public string SampleString { get; set; }
+
+		[DataMember(Name = "CustomDatamemberTwo")]
+		public SubContractSample SampleMemberTwo { get; set; }
+	}
+
+	[DataContract(Name = "SubContractClassUserDefinedName")]
+	public class SubContractSample
+	{
+		[DataMember(Name = "SubContractUserDefinedDataMemberName")]
+		public string SubContractSampleString { get; set; }
 	}
 }

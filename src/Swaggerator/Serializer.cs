@@ -98,7 +98,9 @@ namespace Swaggerator
 					Type t = typeStack.Pop();
 					if (t.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
 					if (t.GetCustomAttributes<TagAttribute>().Select(tn => tn.TagName).Any(HiddenTags.Contains)) { continue; }
-					writer.WritePropertyName(t.FullName);
+
+					var propName = Helpers.GetDataContractNamePropertyValue(t) ?? t.FullName;
+					writer.WritePropertyName(propName);
 					writer.WriteRawValue(WriteType(t, typeStack));
 				}
 				writer.WriteEnd();
@@ -115,11 +117,7 @@ namespace Swaggerator
 			{
 				writer.WriteStartObject();
 
-				var dataContractAttribute = t.GetCustomAttribute<DataContractAttribute>();
-				var idValue = t.FullName;
-				if (dataContractAttribute != null && !string.IsNullOrEmpty(dataContractAttribute.Name))
-					idValue = dataContractAttribute.Name;
-
+				var idValue = Helpers.GetDataContractNamePropertyValue(t) ?? t.FullName;
 				writer.WritePropertyName("id");
 				writer.WriteValue(idValue);
 
@@ -172,18 +170,20 @@ namespace Swaggerator
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				var memberProperties = pi.GetCustomAttribute<MemberPropertiesAttribute>();
-				var dataContractAttribute = pType.GetCustomAttribute<DataContractAttribute>();
 
 				var typeValue = memberProperties != null ? Helpers.MapSwaggerType(pType, typeStack, memberProperties.TypeSizeNote) : Helpers.MapSwaggerType(pType, typeStack);
 
 				//If the Name property in DataContract is defined for this property type, use that name instead.
 				//Needed for cases where a DataContract uses another DataContract as a return type for a member. 
-				if (dataContractAttribute != null && !string.IsNullOrEmpty(dataContractAttribute.Name))
+				var dcName = Helpers.GetDataContractNamePropertyValue(pType);
+				
+				if(!string.IsNullOrEmpty(dcName))
 				{
-					typeValue = dataContractAttribute.Name;
+					typeValue = dcName;
 					if (memberProperties != null && !string.IsNullOrEmpty(memberProperties.TypeSizeNote))
-						typeValue = string.Format("{0}({1})", dataContractAttribute.Name);
+						typeValue = string.Format("{0}({1})", dcName, memberProperties.TypeSizeNote);
 				}
+
 
 				writer.WriteStartObject();
 

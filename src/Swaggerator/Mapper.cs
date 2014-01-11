@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using Swaggerator.Models;
@@ -127,11 +128,16 @@ namespace Swaggerator
 					Helpers.GetCustomAttributeValue<Type, OverrideReturnTypeAttribute>(declaration, "Type") ??
 					declaration.ReturnType;
 
+				var returnTypeString = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(returnType, typeStack));
+				var dataContractName = Helpers.GetDataContractNamePropertyValue(returnType);
+				if (!string.IsNullOrEmpty(dataContractName))
+					returnTypeString = dataContractName;
+
 				Operation operation = new Operation
-				{
+				{ 
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
-					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(returnType, typeStack)),
+					type = returnTypeString,
 					summary = summary,
 					notes = description,
 					accepts = new List<string>(GetContentTypes<AcceptsAttribute>(implementation, declaration)),
