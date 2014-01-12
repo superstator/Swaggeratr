@@ -17,14 +17,10 @@
  * CompositeType.cs : Sample class demonstrating a complex model with tagged properties and multiple property types.
  */
 
-using System.Security.Cryptography.X509Certificates;
 using Swaggerator.Attributes;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
 
 namespace SampleService
 {

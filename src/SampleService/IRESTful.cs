@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.ComponentModel;
 using Swaggerator.Attributes;
 using System.ServiceModel;
 using System.ServiceModel.Web;
