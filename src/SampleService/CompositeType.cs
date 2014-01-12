@@ -18,12 +18,9 @@
  */
 
 using Swaggerator.Attributes;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
 
 namespace SampleService
 {
@@ -74,5 +71,36 @@ namespace SampleService
 	{
 		[DataMember]
 		public string SecretData { get; set; }
+	}
+
+	[DataContract(Name = "MyDataContractName")]
+	public class CustomDataContractSample
+	{
+		[DataMember(Name = "Foo")]
+		public string SampleString { get; set; }
+
+		[DataMember(Name = "Bar")]
+		public SubContractSample SampleMemberTwo { get; set; }
+	}
+
+	[DataContract(Name = "SubContractClassUserDefinedName")]
+	public class SubContractSample
+	{
+		[DataMember(Name = "SubContractUserDefinedDataMemberName")]
+		public string SubContractSampleString { get; set; }
+	}
+
+	[DataContract(Name = "MyRequest")]
+	public class MyReqClass
+	{
+		[DataMember(Name = "MyRequesetMember")]
+		public string MyRespString { get; set; }
+	}
+
+	[DataContract(Name = "MyResonse")]
+	public class MyRespClass
+	{
+		[DataMember(Name = "MyResponseMember")]
+		public string MyReqString { get; set; }
 	}
 }

@@ -52,7 +52,7 @@ namespace SampleService
 			BodyStyle = WebMessageBodyStyle.Bare)]
 		string PutData(string value,
 			[ParameterSettings(IsRequired = true, Description = "Yes, you need to include this.")] string anothervalue,
-			[ParameterSettings(UnderlyingType = typeof (int))] string optionalvalue, 
+			[ParameterSettings(UnderlyingType = typeof(int))] string optionalvalue,
 			[ParameterSettings(TypeSizeNote = "123")] string valueWithLengthRequirement);
 
 		[OperationContract]
@@ -83,6 +83,14 @@ namespace SampleService
 
 		// Note: There is no OperationContractAttribute for the end method.
 		CompositeType EndServiceAsyncMethod(IAsyncResult result);
+
+		[WebGet(UriTemplate = "/DisplayContractName")]
+		CustomDataContractSample DisplayDataContractNameInsteadOfClassName();
+
+		[WebInvoke(UriTemplate = "/DisplayContractNameForRespAndReq", Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json,
+			BodyStyle = WebMessageBodyStyle.Bare)]
+		MyRespClass DisplayContractNameForRespAndReqTest(
+			[ParameterSettings(Description = "Request object", UnderlyingType=typeof(CustomDataContractSample))]MyReqClass req);
 	}
 
 

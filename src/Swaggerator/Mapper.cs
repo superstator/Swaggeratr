@@ -127,11 +127,14 @@ namespace Swaggerator
 					Helpers.GetCustomAttributeValue<Type, OverrideReturnTypeAttribute>(declaration, "Type") ??
 					declaration.ReturnType;
 
+				var returnTypeString = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(returnType, typeStack));
+				returnTypeString = Helpers.GetDataContractNamePropertyValue(returnType) ?? returnTypeString;
+
 				Operation operation = new Operation
-				{
+				{ 
 					httpMethod = httpMethod,
 					nickname = declaration.Name + httpMethod,
-					type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(returnType, typeStack)),
+					type = returnTypeString,
 					summary = summary,
 					notes = description,
 					accepts = new List<string>(GetContentTypes<AcceptsAttribute>(implementation, declaration)),
@@ -156,12 +159,15 @@ namespace Swaggerator
 				ParameterInfo[] parameters = declaration.GetParameters();
 				foreach (ParameterInfo parameter in parameters)
 				{
+					var typeValue = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(parameter.ParameterType, typeStack));
+					typeValue = Helpers.GetDataContractNamePropertyValue(parameter.ParameterType) ?? typeValue;
+
 					Parameter parm = new Parameter
 					{
 						name = parameter.Name,
 						allowMultiple = false,
 						required = true,
-						type = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(parameter.ParameterType, typeStack))
+						type = typeValue
 					};
 
 					//path parameters are simple
@@ -190,7 +196,7 @@ namespace Swaggerator
 
 
 					var settings = implementation.GetParameters().First(p => p.Position.Equals(parameter.Position)).GetCustomAttribute<ParameterSettingsAttribute>() ??
-						 parameter.GetCustomAttribute<Attributes.ParameterSettingsAttribute>();
+						 parameter.GetCustomAttribute<ParameterSettingsAttribute>();
 					if (settings != null)
 					{
 						if (settings.Hidden)
@@ -198,9 +204,18 @@ namespace Swaggerator
 
 						parm.required = settings.IsRequired;
 						parm.description = settings.Description ?? parm.description;
-						parm.type = settings.UnderlyingType == null 
-							? HttpUtility.HtmlEncode(Helpers.MapSwaggerType(parameter.ParameterType, typeStack, settings.TypeSizeNote))
-							: HttpUtility.HtmlEncode(Helpers.MapSwaggerType(settings.UnderlyingType, typeStack, settings.TypeSizeNote));
+
+						var paramTypeToBeMapped = settings.UnderlyingType ?? parameter.ParameterType;
+						var paramTypeStringValue = HttpUtility.HtmlEncode(Helpers.MapSwaggerType(paramTypeToBeMapped, typeStack, settings.TypeSizeNote));
+						var dataContractNameForParamType = Helpers.GetDataContractNamePropertyValue(paramTypeToBeMapped);
+						if (!string.IsNullOrEmpty(dataContractNameForParamType))
+						{
+							paramTypeStringValue = string.IsNullOrEmpty(settings.TypeSizeNote)
+								? dataContractNameForParamType
+								: string.Format("{0}({1})", dataContractNameForParamType, settings.TypeSizeNote);
+						}
+
+						parm.type = paramTypeStringValue;
 					}
 
 					operation.parameters.Add(parm);

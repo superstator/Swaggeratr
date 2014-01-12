@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Swaggerator
@@ -103,6 +104,15 @@ namespace Swaggerator
 		internal static bool TagIsHidden(this Dictionary<string, Configuration.TagElement> tagConfigurations, IEnumerable<string> itemTags)
 		{
 			return tagConfigurations.Values.Any(t => t.Visibile.Equals(false) && itemTags.Contains(t.Name));
+		}
+
+		internal static string GetDataContractNamePropertyValue(Type type)
+		{
+			var attrib = type.GetCustomAttribute<DataContractAttribute>();
+			if (attrib != null && !string.IsNullOrEmpty(attrib.Name))
+				return attrib.Name;
+
+			return null;
 		}
 	}
 }

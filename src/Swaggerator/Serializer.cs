@@ -98,7 +98,9 @@ namespace Swaggerator
 					Type t = typeStack.Pop();
 					if (t.GetCustomAttribute<HiddenAttribute>() != null) { continue; }
 					if (t.GetCustomAttributes<TagAttribute>().Select(tn => tn.TagName).Any(HiddenTags.Contains)) { continue; }
-					writer.WritePropertyName(t.FullName);
+
+					var propName = Helpers.GetDataContractNamePropertyValue(t) ?? t.FullName;
+					writer.WritePropertyName(propName);
 					writer.WriteRawValue(WriteType(t, typeStack));
 				}
 				writer.WriteEnd();
@@ -114,8 +116,11 @@ namespace Swaggerator
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				writer.WriteStartObject();
+
+				var idValue = Helpers.GetDataContractNamePropertyValue(t) ?? t.FullName;
 				writer.WritePropertyName("id");
-				writer.WriteValue(t.FullName);
+				writer.WriteValue(idValue);
+
 				writer.WritePropertyName("properties");
 				writer.WriteRawValue(WriteProperties(t, typeStack));
 			}
@@ -136,7 +141,12 @@ namespace Swaggerator
 						 pi.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Any(HiddenTags.Contains))
 					{ continue; }
 
-					writer.WritePropertyName(pi.Name);
+					var dataMemberAttribute = pi.GetCustomAttribute<DataMemberAttribute>();
+					var propertyName = pi.Name;
+					if (dataMemberAttribute != null && !string.IsNullOrEmpty(dataMemberAttribute.Name))
+						propertyName = dataMemberAttribute.Name;
+
+					writer.WritePropertyName(propertyName);
 					writer.WriteRawValue(WriteProperty(pi, typeStack));
 				}
 				writer.WriteEnd();
@@ -161,12 +171,24 @@ namespace Swaggerator
 			{
 				var memberProperties = pi.GetCustomAttribute<MemberPropertiesAttribute>();
 
+				var typeValue = memberProperties != null ? Helpers.MapSwaggerType(pType, typeStack, memberProperties.TypeSizeNote) : Helpers.MapSwaggerType(pType, typeStack);
+
+				//If the Name property in DataContract is defined for this property type, use that name instead.
+				//Needed for cases where a DataContract uses another DataContract as a return type for a member. 
+				var dcName = Helpers.GetDataContractNamePropertyValue(pType);
+				
+				if(!string.IsNullOrEmpty(dcName))
+				{
+					typeValue = dcName;
+					if (memberProperties != null && !string.IsNullOrEmpty(memberProperties.TypeSizeNote))
+						typeValue = string.Format("{0}({1})", dcName, memberProperties.TypeSizeNote);
+				}
+
+
 				writer.WriteStartObject();
 
 				writer.WritePropertyName("type");
-				writer.WriteValue(memberProperties != null
-					? Helpers.MapSwaggerType(pType, typeStack, memberProperties.TypeSizeNote)
-					: Helpers.MapSwaggerType(pType, typeStack));
+				writer.WriteValue(typeValue);
 
 				writer.WritePropertyName("required");
 				writer.WriteValue(required);

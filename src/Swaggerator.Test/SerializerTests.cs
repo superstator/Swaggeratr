@@ -37,7 +37,7 @@ namespace Swaggerator.Test
 		public void CanWriteCompositeType()
 		{
 			Serializer serializer = new Serializer(null);
-			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			string model = serializer.WriteType(typeof (SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
 			var obj = JObject.Parse(model);
@@ -59,9 +59,9 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanWriteTypeStack()
 		{
-			Serializer serializer = new Serializer(new [] { "InternalUse" });
+			Serializer serializer = new Serializer(new[] {"InternalUse"});
 			Stack<Type> typeStack = new Stack<Type>();
-			typeStack.Push(typeof(SampleService.CompositeType));
+			typeStack.Push(typeof (SampleService.CompositeType));
 
 			string models = serializer.WriteModels(typeStack);
 
@@ -76,7 +76,7 @@ namespace Swaggerator.Test
 		{
 			Serializer serializer = new Serializer(null);
 
-			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			string model = serializer.WriteType(typeof (SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
 			var obj = JObject.Parse(HttpUtility.UrlDecode(model));
@@ -103,7 +103,7 @@ namespace Swaggerator.Test
 			//gets the Secret property when it's tag isn't configured
 			var serializerAll = new Serializer(null);
 
-			string modelAll = serializerAll.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			string modelAll = serializerAll.WriteType(typeof (SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(modelAll));
 
 			var objAll = JObject.Parse(modelAll);
@@ -111,9 +111,9 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(objAll["properties"]["Secret"]);
 
 			//hides it when it is
-			var serializer = new Serializer(new [] { "InternalUse" });
+			var serializer = new Serializer(new[] {"InternalUse"});
 
-			string model = serializer.WriteType(typeof(SampleService.CompositeType), new Stack<Type>());
+			string model = serializer.WriteType(typeof (SampleService.CompositeType), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(model));
 
 			var obj = JObject.Parse(model);
@@ -125,8 +125,8 @@ namespace Swaggerator.Test
 		public void CanHideTaggedTypes()
 		{
 			var typeStack = new Stack<Type>();
-			typeStack.Push(typeof(ModelSampleA));
-			typeStack.Push(typeof(ModelSampleB));
+			typeStack.Push(typeof (ModelSampleA));
+			typeStack.Push(typeof (ModelSampleB));
 
 			//gets the Secret property when it's tag isn't configured
 			var serializerAll = new Serializer(null);
@@ -140,8 +140,8 @@ namespace Swaggerator.Test
 
 			var serializerTags = new Serializer(new[] {"Test"});
 
-			typeStack.Push(typeof(ModelSampleA));
-			typeStack.Push(typeof(ModelSampleB));
+			typeStack.Push(typeof (ModelSampleA));
+			typeStack.Push(typeof (ModelSampleB));
 
 			string modelHidden = serializerTags.WriteModels(typeStack);
 			Assert.IsFalse(string.IsNullOrEmpty(modelHidden));
@@ -154,7 +154,7 @@ namespace Swaggerator.Test
 		public void CanWriteMemberProperties()
 		{
 			var serializer = new Serializer(null);
-			var type = serializer.WriteType(typeof(ModelSampleA), new Stack<Type>());
+			var type = serializer.WriteType(typeof (ModelSampleA), new Stack<Type>());
 			Assert.IsFalse(string.IsNullOrEmpty(type));
 			var obj = JObject.Parse(type);
 			var container = obj["properties"]["MyString"];
@@ -163,12 +163,46 @@ namespace Swaggerator.Test
 			Assert.AreEqual("my string description", container["description"]);
 
 			var anotherSerializer = new Serializer(null);
-			var sampleBModelSerialized = anotherSerializer.WriteType(typeof (ModelSampleC), new Stack<Type>());
-			Assert.IsFalse(string.IsNullOrEmpty(sampleBModelSerialized));
-			var sbObj = JObject.Parse(sampleBModelSerialized);
+			var sampleCModelSerialized = anotherSerializer.WriteType(typeof (ModelSampleC), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(sampleCModelSerialized));
+			var sbObj = JObject.Parse(sampleCModelSerialized);
 			var sbContainer = sbObj["properties"]["MyString2"];
 			Assert.IsNotNull(sbContainer);
 			Assert.AreEqual("string", sbContainer["type"]);
+		}
+
+		[TestMethod]
+		public void CanWriteDataContractName()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof (ModelSampleWithDataContractName), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			Assert.AreEqual("ModelSampleName", jObj["id"]);
+		}
+
+		[TestMethod]
+		public void CanWriteDataMemberName()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof(ModelSampleWithDataContractName), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			Assert.AreEqual("ModelSampleName", jObj["id"]);
+			Assert.IsNotNull(jObj["properties"]["CustomMemberName"]);
+		}
+
+		[TestMethod]
+		public void CanWriteCustomReturnTypeNameInDataContractWithoutFullName()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof (ModelSampleWithDataContractName), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			Assert.AreEqual("ModelSampleName", jObj["id"]);
+			var container = jObj["properties"]["CustomReturnType"];
+			Assert.IsNotNull(container);
+			Assert.AreEqual("ModelSampleReferenced", container["type"]);
 		}
 
 
@@ -186,11 +220,27 @@ namespace Swaggerator.Test
 			public string MyString { get; set; }
 		}
 
-		[DataContract]
 		internal class ModelSampleC
 		{
 			[DataMember]
 			public string MyString2 { get; set; }
+		}
+
+		[DataContract(Name = "ModelSampleName")]
+		internal class ModelSampleWithDataContractName
+		{
+			[DataMember(Name = "CustomMemberName")]
+			public string MyString3 { get; set; }
+
+			[DataMember(Name = "CustomReturnType")]
+			public ModelSampleReferencedByAnotherDataContract ModelSampleRefd { get; set; }
+		}
+
+		[DataContract(Name = "ModelSampleReferenced")]
+		internal class ModelSampleReferencedByAnotherDataContract
+		{
+			[DataMember(Name = "Bar")]
+			public string Foo { get; set; }
 		}
 	}
 	
