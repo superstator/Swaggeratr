@@ -205,6 +205,19 @@ namespace Swaggerator.Test
 			Assert.AreEqual("ModelSampleReferenced", container["type"]);
 		}
 
+		[TestMethod]
+		public void CanWriteArrayTypeNameWithDataContractName()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof (ModelSampleC), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			Assert.IsNotNull(jObj["properties"]["ArrayOfSamples"]);
+			var arrayElementTypeValue = jObj["properties"]["ArrayOfSamples"]["items"]["$ref"];
+			Assert.AreEqual("ModelSampleName", arrayElementTypeValue);
+
+		}
+
 
 		[DataContract]
 		[Tag("Test")]
@@ -224,6 +237,9 @@ namespace Swaggerator.Test
 		{
 			[DataMember]
 			public string MyString2 { get; set; }
+
+			[DataMember]
+			public List<ModelSampleWithDataContractName> ArrayOfSamples { get; set; }
 		}
 
 		[DataContract(Name = "ModelSampleName")]
