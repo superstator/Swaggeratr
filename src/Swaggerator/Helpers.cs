@@ -98,7 +98,12 @@ namespace Swaggerator
 			if (enumType == null) { throw new ArgumentException("Type must be an IEnumerable<T>."); }
 
 			Type elementType = enumType.GetGenericArguments().First();
-			return MapSwaggerType(elementType, typeStack);
+
+			var result = MapSwaggerType(elementType, typeStack);
+			var dataContractNameOfElementType = GetDataContractNamePropertyValue(elementType);
+			result = string.IsNullOrEmpty(dataContractNameOfElementType) ? result : dataContractNameOfElementType;
+
+			return result;
 		}
 
 		internal static bool TagIsHidden(this Dictionary<string, Configuration.TagElement> tagConfigurations, IEnumerable<string> itemTags)
