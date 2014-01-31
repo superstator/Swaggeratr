@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -50,6 +51,8 @@ namespace Swaggerator
 			if (type == typeof(ushort)) { return BuildTypeString("integer", "16, unsigned", typeNote); }
 			if (type == typeof(string)) { return BuildTypeString("string", typeNote); }
 			if (type == typeof(DateTime)) { return BuildTypeString("Date", typeNote); }
+			if (type == typeof (Guid)) { return BuildTypeString("string", typeNote);}
+			if (type == typeof(Stream)) { return BuildTypeString("stream", typeNote); }
 
 			if (type == typeof (void)) {return "None";}
 

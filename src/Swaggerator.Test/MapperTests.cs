@@ -19,6 +19,7 @@
 
 
 using System;
+using System.IO;
 using System.ServiceModel.Web;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
@@ -160,7 +161,7 @@ namespace Swaggerator.Test
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 			var operation = operations.First(o => o.Item1.Equals("/voidtest")).Item2;
 
-			Assert.AreEqual(15, operation.parameters.Count);
+			Assert.AreEqual(17, operation.parameters.Count);
 			Assert.AreEqual("boolean", GetTypeFromParamList("bl", operation.parameters));
 			Assert.AreEqual("integer(8)", GetTypeFromParamList("bt", operation.parameters));
 			Assert.AreEqual("integer(8, signed)", GetTypeFromParamList("sbt", operation.parameters));
@@ -176,6 +177,9 @@ namespace Swaggerator.Test
 			Assert.AreEqual("integer(16, unsigned)", GetTypeFromParamList("ust", operation.parameters));
 			Assert.AreEqual("string", GetTypeFromParamList("str", operation.parameters));
 			Assert.AreEqual("Date", GetTypeFromParamList("dt", operation.parameters));
+			Assert.AreEqual("string", GetTypeFromParamList("guid", operation.parameters));
+			Assert.AreEqual("stream", GetTypeFromParamList("stream", operation.parameters));
+			
 		}
 
 		[TestMethod]
@@ -267,7 +271,9 @@ namespace Swaggerator.Test
 				short st,
 				ushort ust,
 				string str,
-				DateTime dt);
+				DateTime dt,
+				Guid guid,
+				Stream stream);
 
 			[WebGet(UriTemplate = "/hideparamtest")]
 			int HideParamTest(int foo, [ParameterSettings(Hidden = true)]string bar);
@@ -305,7 +311,9 @@ namespace Swaggerator.Test
 				short st,
 				ushort ust,
 				string str,
-				DateTime dt)
+				DateTime dt,
+				Guid guid,
+				Stream stream)
 			{
 				throw new NotImplementedException();
 			}
