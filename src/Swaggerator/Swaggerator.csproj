@@ -60,6 +60,7 @@
     <Compile Include="Attributes\MemberPropertiesAttribute.cs" />
     <Compile Include="Attributes\HiddenAttribute.cs" />
     <Compile Include="Attributes\OperationNotesAttribute.cs" />
+    <Compile Include="Attributes\OperationNotesListAttribute.cs" />
     <Compile Include="Attributes\OperationSummaryAttribute.cs" />
     <Compile Include="Attributes\OverrideReturnTypeAttribute.cs" />
     <Compile Include="Attributes\ParameterSettingsAttribute.cs" />

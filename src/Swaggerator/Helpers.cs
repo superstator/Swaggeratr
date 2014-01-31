@@ -24,6 +24,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using Swaggerator.Attributes;
 
 namespace Swaggerator
 {
@@ -118,6 +119,19 @@ namespace Swaggerator
 				return attrib.Name;
 
 			return null;
+		}
+
+		internal static string ConvertOperationNotesListToUrl(MethodInfo methodInfo)
+		{
+			var result = string.Empty;
+			var notesList = GetCustomAttributeValue<string[], OperationNotesListAttribute>(methodInfo, "NotesList");
+			if (notesList != null)
+			{
+				result = 
+				result = notesList.Aggregate(result, (current, noteitem) => current + ("<li> - " + noteitem));
+			}
+
+			return result;
 		}
 	}
 }

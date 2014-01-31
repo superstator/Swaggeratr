@@ -135,6 +135,18 @@ namespace Swaggerator.Test
 
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
+			var operation = operations.First(o => o.Item1.Equals("/voidtest")).Item2;
+			var notes = "<ul><li> - item1</li><li> - item2</li></ul>";
+			Assert.AreEqual(notes, operation.notes);
+		}
+
+		[TestMethod]
+		public void CanMapNotesList()
+		{
+			var mapper = new Mapper(null);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
 			var operation = operations.First(o => o.Item1.Equals("/method/test")).Item2;
 
 			Assert.AreEqual("Short format", operation.summary);
@@ -251,6 +263,7 @@ namespace Swaggerator.Test
 			[WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
 
+			[OperationNotesList(new[]{ "item1", "item2"})]
 			[WebInvoke(Method = "DELETE", UriTemplate = "/voidtest")]
 			void VoidMethod(
 				bool bl, 
