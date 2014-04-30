@@ -57,6 +57,10 @@ namespace SampleService
 		[DataMember]
 		[MemberProperties(TypeSizeNote = "10", Description = "Description text")]
 		public string StringValueWithLengthRestriction { get; set; }
+
+		[DataMember]
+		[MemberProperties(Description = "List description text")]
+		public List<SubContractSample> SampleList { get; set; }
 	}
 
 	public enum EnumType
