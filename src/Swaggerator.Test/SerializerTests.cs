@@ -47,7 +47,7 @@ namespace Swaggerator.Test
 			var props = obj["properties"] as JObject;
 			Assert.IsNotNull(props);
 			Assert.IsTrue(props.HasValues);
-			Assert.AreEqual(6, props.Count);
+			Assert.AreEqual(7, props.Count);
 
 			Assert.AreEqual(true, props["BoolValue"]["required"]);
 			Assert.AreEqual("array", props["ArrayValue"]["type"]);
@@ -67,7 +67,7 @@ namespace Swaggerator.Test
 
 			var obj = JObject.Parse(HttpUtility.UrlDecode(models));
 
-			Assert.AreEqual(1, obj.Count);
+			Assert.AreEqual(2, obj.Count);
 			Assert.IsNotNull(obj["SampleService.CompositeType"]);
 		}
 
@@ -215,8 +215,25 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(jObj["properties"]["ArrayOfSamples"]);
 			var arrayElementTypeValue = jObj["properties"]["ArrayOfSamples"]["items"]["$ref"];
 			Assert.AreEqual("ModelSampleName", arrayElementTypeValue);
+			var container = jObj["properties"]["ArrayOfSamples"];
+			Assert.IsNotNull(container);
+			Assert.AreEqual("my list description", container["description"]);
+		}
+
+		[TestMethod]
+		public void CanWriteArrayMemberProperties()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof(ModelSampleC), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			Assert.IsNotNull(jObj["properties"]["ArrayOfSamples"]);
+			var arrayElementTypeValue = jObj["properties"]["ArrayOfSamples"]["items"]["$ref"];
+			Assert.AreEqual("ModelSampleName", arrayElementTypeValue);
 
 		}
+
+
 
 
 		[DataContract]
@@ -239,6 +256,7 @@ namespace Swaggerator.Test
 			public string MyString2 { get; set; }
 
 			[DataMember]
+			[MemberProperties(Description = "my list description")]
 			public List<ModelSampleWithDataContractName> ArrayOfSamples { get; set; }
 		}
 

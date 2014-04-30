@@ -193,6 +193,21 @@ namespace Swaggerator
 				writer.WritePropertyName("required");
 				writer.WriteValue(required);
 
+				DescriptionAttribute description = pi.GetCustomAttribute<DescriptionAttribute>();
+				if (description != null)
+				{
+					writer.WritePropertyName("description");
+					writer.WriteValue(description.Description);
+				}
+				else
+				{
+					if (memberProperties != null)
+					{
+						writer.WritePropertyName("description");
+						writer.WriteValue(memberProperties.Description);
+					}
+				}
+
 				if (Helpers.MapSwaggerType(pType, typeStack) == "array")
 				{
 					writer.WritePropertyName("items");
@@ -211,23 +226,6 @@ namespace Swaggerator
 					}
 					writer.WriteEndArray();
 				}
-
-				DescriptionAttribute description = pi.GetCustomAttribute<DescriptionAttribute>();
-				if (description != null)
-				{
-					writer.WritePropertyName("description");
-					writer.WriteValue(description.Description);
-				}
-				else
-				{
-					if (memberProperties != null)
-					{
-						writer.WritePropertyName("description");
-						writer.WriteValue(memberProperties.Description);
-					}
-				}
-
-
 
 				writer.WriteEnd();
 			}
