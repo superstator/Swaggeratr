@@ -153,7 +153,8 @@ namespace Swaggerator
 															 where !operation.errorResponses.Any(c => c.code.Equals(r.code))
 															 select r);
 
-				Uri uri = new Uri("http://base" + uriTemplate);
+                Uri uri = null;
+                Uri.TryCreate(new Uri("http://base"), uriTemplate, out uri);
 
 				//try to map each implementation parameter to the uriTemplate.
 				ParameterInfo[] parameters = declaration.GetParameters();
