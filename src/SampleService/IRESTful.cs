@@ -91,6 +91,11 @@ namespace SampleService
 			BodyStyle = WebMessageBodyStyle.Bare)]
 		MyRespClass DisplayContractNameForRespAndReqTest(
 			[ParameterSettings(Description = "Request object", UnderlyingType=typeof(CustomDataContractSample))]MyReqClass req);
+
+		[WebInvoke(UriTemplate = "/DisplayBaseClassProperties", Method = "POST", RequestFormat = WebMessageFormat.Json,
+			ResponseFormat = WebMessageFormat.Json,
+			BodyStyle = WebMessageBodyStyle.Bare)]
+		MySampleFurtherDerived DisplayBaseClassProperties(MySampleFirstDerived mySample);
 	}
 
 

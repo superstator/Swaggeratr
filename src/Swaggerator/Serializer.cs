@@ -131,28 +131,54 @@ namespace Swaggerator
 		{
 			StringBuilder sb = new StringBuilder();
 			StringWriter sw = new StringWriter(sb);
+
+			//var hasParent = type.BaseType != typeof (Object);
+			
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				writer.WriteStartObject();
-				foreach (PropertyInfo pi in type.GetProperties())
+
+				var properties = type.GetProperties();
+
+				//only pass immediate class properties at a time to write properties in the order of inheritance from base. (i.e. base first, derived next.) 
+
+				//get a stack of class types within the passed type so that the base class comes at the top.
+				var classStack = new Stack<Type>();
+				foreach (var propertyInfo in properties.Where(propertyInfo => !classStack.Contains(propertyInfo.DeclaringType)))
 				{
-					if (pi.GetCustomAttribute<DataMemberAttribute>() == null ||
-						 pi.GetCustomAttribute<HiddenAttribute>() != null ||
-						 pi.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Any(HiddenTags.Contains))
-					{ continue; }
-
-					var dataMemberAttribute = pi.GetCustomAttribute<DataMemberAttribute>();
-					var propertyName = pi.Name;
-					if (dataMemberAttribute != null && !string.IsNullOrEmpty(dataMemberAttribute.Name))
-						propertyName = dataMemberAttribute.Name;
-
-					writer.WritePropertyName(propertyName);
-					writer.WriteRawValue(WriteProperty(pi, typeStack));
+					classStack.Push(propertyInfo.DeclaringType);
 				}
+				//iterate through each class to only get properties for that class to write
+				foreach (var propertiesToWrite in classStack.Select(cType => properties.Where(p => p.DeclaringType == cType)))
+				{
+					WritePropertyNameValuePair(propertiesToWrite, typeStack, writer);
+				}
+
 				writer.WriteEnd();
 			}
 			return sb.ToString();
 		}
+
+
+		private void WritePropertyNameValuePair(IEnumerable<PropertyInfo> properties, Stack<Type> typeStack, JsonWriter writer)
+		{
+			foreach (var pi in properties)
+			{
+				if (pi.GetCustomAttribute<DataMemberAttribute>() == null 
+					|| pi.GetCustomAttribute<HiddenAttribute>() != null 
+					|| pi.GetCustomAttributes<TagAttribute>().Select(t => t.TagName).Any(HiddenTags.Contains))
+					continue;
+
+				var dataMemberAttribute = pi.GetCustomAttribute<DataMemberAttribute>();
+				var propertyName = pi.Name;
+				if (dataMemberAttribute != null && !string.IsNullOrEmpty(dataMemberAttribute.Name))
+					propertyName = dataMemberAttribute.Name;
+
+				writer.WritePropertyName(propertyName);
+				writer.WriteRawValue(WriteProperty(pi, typeStack));
+			}
+		}
+
 
 		private string WriteProperty(PropertyInfo pi, Stack<Type> typeStack)
 		{

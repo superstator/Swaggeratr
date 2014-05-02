@@ -104,6 +104,10 @@ namespace SampleService
 	    {
 			 return new MyRespClass();
 	    }
-		
+
+	    public MySampleFurtherDerived DisplayBaseClassProperties(MySampleFirstDerived mySample)
+	    {
+		    return new MySampleFurtherDerived();
+	    }
     }
 }

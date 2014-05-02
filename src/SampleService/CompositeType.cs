@@ -107,4 +107,34 @@ namespace SampleService
 		[DataMember(Name = "MyResponseMember")]
 		public string MyReqString { get; set; }
 	}
+
+	[DataContract(Name = "MySampleBase")]
+	public class MySampleBase
+	{
+		[DataMember(Name = "TestBaseString")]
+		public string TestBaseString { get; set; }
+
+		[DataMember(Name = "TestBaseString2")]
+		public string TestBaseString2 { get; set; }
+	}
+
+	[DataContract(Name = "MySampleFirstDerived")]
+	public class MySampleFirstDerived : MySampleBase
+	{
+		[DataMember(Name = "TestDerivedString1")]
+		public string TestDerivedString1 { get; set; }
+
+		[DataMember(Name = "TestDerivedString2")]
+		public string TestDerivedString2 { get; set; }
+	}
+
+	[DataContract(Name = "ModelSampleFurtherDerived")]
+	public class MySampleFurtherDerived : MySampleFirstDerived
+	{
+		[DataMember(Name = "TestFurtherDerivedString1")]
+		public string TestFurtherDerivedString1 { get; set; }
+
+		[DataMember(Name = "TestFurtherDerivedString2")]
+		public string TestFurtherDerivedString2 { get; set; }
+	}
 }

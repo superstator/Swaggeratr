@@ -215,9 +215,6 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(jObj["properties"]["ArrayOfSamples"]);
 			var arrayElementTypeValue = jObj["properties"]["ArrayOfSamples"]["items"]["$ref"];
 			Assert.AreEqual("ModelSampleName", arrayElementTypeValue);
-			var container = jObj["properties"]["ArrayOfSamples"];
-			Assert.IsNotNull(container);
-			Assert.AreEqual("my list description", container["description"]);
 		}
 
 		[TestMethod]
@@ -230,10 +227,27 @@ namespace Swaggerator.Test
 			Assert.IsNotNull(jObj["properties"]["ArrayOfSamples"]);
 			var arrayElementTypeValue = jObj["properties"]["ArrayOfSamples"]["items"]["$ref"];
 			Assert.AreEqual("ModelSampleName", arrayElementTypeValue);
-
+			var container = jObj["properties"]["ArrayOfSamples"];
+			Assert.IsNotNull(container);
+			Assert.AreEqual("my list description", container["description"]);
 		}
 
-
+		[TestMethod]
+		public void CanWriteParentChildContractsInCorrectOrder()
+		{
+			var serializer = new Serializer(null);
+			var serialized = serializer.WriteType(typeof(ModelSampleFurtherDerived), new Stack<Type>());
+			Assert.IsFalse(string.IsNullOrEmpty(serialized));
+			var jObj = JObject.Parse(serialized);
+			var properties = jObj["properties"];
+			Assert.AreEqual(6, properties.Count());
+			Assert.AreEqual("TestBaseString", ((JProperty)properties.ElementAt(0)).Name);
+			Assert.AreEqual("TestBaseString2", ((JProperty)properties.ElementAt(1)).Name);
+			Assert.AreEqual("TestDerivedString1", ((JProperty)properties.ElementAt(2)).Name);
+			Assert.AreEqual("TestDerivedString2", ((JProperty)properties.ElementAt(3)).Name);
+			Assert.AreEqual("TestFurtherDerivedString1", ((JProperty)properties.ElementAt(4)).Name);
+			Assert.AreEqual("TestFurtherDerivedString2", ((JProperty)properties.ElementAt(5)).Name);
+		}
 
 
 		[DataContract]
@@ -275,6 +289,36 @@ namespace Swaggerator.Test
 		{
 			[DataMember(Name = "Bar")]
 			public string Foo { get; set; }
+		}
+
+		[DataContract(Name = "ModelSampleBase")]
+		internal class ModelSampleBase
+		{
+			[DataMember(Name = "TestBaseString")]
+			public string TestBaseString { get; set; }
+
+			[DataMember(Name = "TestBaseString2")]
+			public string TestBaseString2 { get; set; }
+		}
+
+		[DataContract(Name = "ModelSampleFirstDerived")]
+		internal class ModelSampleFirstDerived : ModelSampleBase
+		{
+			[DataMember(Name = "TestDerivedString1")]
+			public string TestDerivedString1 { get; set; }
+
+			[DataMember (Name = "TestDerivedString2")]
+			public string TestDerivedString2 { get; set; }
+		}
+
+		[DataContract(Name = "ModelSampleFurtherDerived")]
+		internal class ModelSampleFurtherDerived : ModelSampleFirstDerived
+		{
+			[DataMember(Name = "TestFurtherDerivedString1")]
+			public string TestFurtherDerivedString1 { get; set; }
+
+			[DataMember(Name = "TestFurtherDerivedString2")]
+			public string TestFurtherDerivedString2 { get; set; }
 		}
 	}
 	
