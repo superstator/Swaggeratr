@@ -14,27 +14,27 @@
  * limitations under the License.
  * 
  * 
- * SwaggerSection.cs : Swaggerator configuration section model.
+ * SettingsElement.cs : Swaggerator tag configuration element model.
  */
 
 using System.Configuration;
 
 namespace Swaggerator.Configuration
 {
-	public class SwaggerSection : ConfigurationSection
+	public class SettingElement : ConfigurationElement
 	{
-		[ConfigurationProperty("tags", IsRequired = true)]
-		public TagCollection Tags
+		[ConfigurationProperty("name", IsRequired = true, IsKey = true)]
+		public string Name
 		{
-			get { return (TagCollection)this["tags"]; }
-			set { this["tags"] = value; }
+			get { return (string)this["name"]; }
+			set { this["name"] = value; }
 		}
 
-		[ConfigurationProperty("settings", IsRequired = false)]
-		public SettingCollection Settings
+		[ConfigurationProperty("value", IsRequired = true)]
+		public string Value
 		{
-			get { return (SettingCollection) this["settings"]; }
-			set { this["settings"] = value; }
+			get { return (string)this["value"]; }
+			set { this["value"] = value; }
 		}
 	}
 }

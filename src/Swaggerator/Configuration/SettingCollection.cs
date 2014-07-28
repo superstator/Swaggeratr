@@ -14,27 +14,30 @@
  * limitations under the License.
  * 
  * 
- * SwaggerSection.cs : Swaggerator configuration section model.
+ * SettingCollection.cs : Swaggerator tag configuration element model.
  */
 
+using System;
 using System.Configuration;
 
 namespace Swaggerator.Configuration
 {
-	public class SwaggerSection : ConfigurationSection
+	[ConfigurationCollection(typeof(TagElement), AddItemName = "setting")]
+	public class SettingCollection : ConfigurationElementCollection
 	{
-		[ConfigurationProperty("tags", IsRequired = true)]
-		public TagCollection Tags
+		protected override ConfigurationElement CreateNewElement()
 		{
-			get { return (TagCollection)this["tags"]; }
-			set { this["tags"] = value; }
+			return new SettingElement();
 		}
 
-		[ConfigurationProperty("settings", IsRequired = false)]
-		public SettingCollection Settings
+		protected override object GetElementKey(ConfigurationElement element)
 		{
-			get { return (SettingCollection) this["settings"]; }
-			set { this["settings"] = value; }
+			if (element == null)
+			{
+				throw new ArgumentException("element");
+			}
+			return ((SettingElement)element).Name;
 		}
+
 	}
 }

@@ -35,9 +35,32 @@ namespace Swaggerator
 		internal Mapper(IEnumerable<string> hiddenTags)
 		{
 			HiddenTags = hiddenTags ?? new List<string>();
+
+			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection("swagger") ?? new Configuration.SwaggerSection());
+			var settingsValue =
+				config.Settings.OfType<Configuration.SettingElement>()
+					.Where(s => s.Name == "ShowRequiredQueryParamsInHeader")
+					.Select(v => v.Value).FirstOrDefault();
+			bool setting;
+			if (string.IsNullOrEmpty(settingsValue))
+				setting = false;
+			else
+				bool.TryParse(settingsValue, out setting);
+			
+			ShowRequiredQueryParamsInHeader = setting;
 		}
 
+		/// <summary>
+		/// Unit test use only
+		/// </summary>
+		internal Mapper(IEnumerable<string> hiddenTags, bool showRequiredQueryParams)
+		{
+			HiddenTags = hiddenTags ?? new List<string>();
+			ShowRequiredQueryParamsInHeader = showRequiredQueryParams;
+		}
+		
 		internal readonly IEnumerable<string> HiddenTags;
+		internal readonly bool ShowRequiredQueryParamsInHeader;
 
 		/// <summary>
 		/// Find methods of the supplied type which have WebGet or WebInvoke attributes.
@@ -156,6 +179,8 @@ namespace Swaggerator
                 Uri uri = null;
                 Uri.TryCreate(new Uri("http://base"), uriTemplate, out uri);
 
+				var pathToReturn = uri.LocalPath;
+
 				//try to map each implementation parameter to the uriTemplate.
 				ParameterInfo[] parameters = declaration.GetParameters();
 				foreach (ParameterInfo parameter in parameters)
@@ -217,12 +242,17 @@ namespace Swaggerator
 						}
 
 						parm.type = paramTypeStringValue;
+
+						if (parm.paramType == "query" && parm.required && ShowRequiredQueryParamsInHeader)
+						{
+							pathToReturn += pathToReturn.Contains("?") ? string.Format("&{0}={{{1}}}", parm.name, parm.name) : string.Format("?{0}={{{1}}}", parm.name, parm.name);
+						}
 					}
 
 					operation.parameters.Add(parm);
 				}
 
-				yield return new Tuple<string, Operation>(uri.LocalPath, operation);
+				yield return new Tuple<string, Operation>(pathToReturn, operation);
 			}
 		}
 

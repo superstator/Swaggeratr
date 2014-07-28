@@ -68,6 +68,8 @@
     <Compile Include="Attributes\ResponseCodeAttribute.cs" />
     <Compile Include="Attributes\SwaggeratedAttribute.cs" />
     <Compile Include="Attributes\TagAttribute.cs" />
+    <Compile Include="Configuration\SettingCollection.cs" />
+    <Compile Include="Configuration\SettingElement.cs" />
     <Compile Include="Configuration\SwaggerSection.cs" />
     <Compile Include="Configuration\TagCollection.cs" />
     <Compile Include="Configuration\TagElement.cs" />
