@@ -65,13 +65,27 @@ namespace Swaggerator.Test
 			Assert.IsTrue(string.IsNullOrEmpty(uno.description));
 
 			Assert.AreEqual("query", dos.paramType);
-			Assert.AreEqual(false, dos.required);
+			Assert.AreEqual(true, dos.required);
 			Assert.AreEqual("integer(32)", dos.type);
 
 			Assert.AreEqual("query", tres.paramType);
 			Assert.AreEqual(false, tres.required);
 			Assert.AreEqual("The third option.", tres.description);
 			Assert.AreEqual("string(22)", tres.type);
+		}
+
+		[TestMethod]
+		public void CanMapOperationUriWithRequiredParams()
+		{
+			var mapper = new Mapper(new List<string> { "SecretThings" }, true);
+			
+			Assert.IsTrue(mapper.ShowRequiredQueryParamsInHeader);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+
+			Assert.AreEqual(6, operations.Count());
+			Assert.AreEqual("/method/test?uno={uno}&dos={dos}", operations.First().Item1);
 		}
 
 		[TestMethod]
@@ -257,10 +271,10 @@ namespace Swaggerator.Test
 
 			[WebInvoke(Method = "DELETE", UriTemplate = "/voidtest")]
 			void VoidMethod(
-				bool bl, 
-				byte bt, 
-				sbyte sbt, 
-				char ch, 
+				bool bl,
+				byte bt,
+				sbyte sbt,
+				char ch,
 				decimal dm,
 				double db,
 				float fl,
@@ -286,13 +300,13 @@ namespace Swaggerator.Test
 			SampleService.CustomDataContractSample CustomTypeTest();
 
 			[WebInvoke(UriTemplate = "/overrideparamtypeascustomtypetest", Method = "POST")]
-			SampleService.MyRespClass OverrideParamTypeAsCustomType([ParameterSettings(UnderlyingType=typeof(SampleService.MyReqClass))]string req);
+			SampleService.MyRespClass OverrideParamTypeAsCustomType([ParameterSettings(UnderlyingType = typeof(SampleService.MyReqClass))]string req);
 
 		}
 
 		class MapTest : IMapTest
 		{
-			public int Method(string uno, [ParameterSettings(IsRequired = false, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
+			public int Method(string uno, [ParameterSettings(IsRequired = true, UnderlyingType = typeof(int))]string dos, string tres) { throw new NotImplementedException(); }
 
 			public int SecretMethod() { throw new NotImplementedException(); }
 
