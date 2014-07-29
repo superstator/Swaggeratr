@@ -37,30 +37,40 @@ namespace Swaggerator
 			HiddenTags = hiddenTags ?? new List<string>();
 
 			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection("swagger") ?? new Configuration.SwaggerSection());
-			var settingsValue =
-				config.Settings.OfType<Configuration.SettingElement>()
-					.Where(s => s.Name == "ShowRequiredQueryParamsInHeader")
-					.Select(v => v.Value).FirstOrDefault();
-			bool setting;
-			if (string.IsNullOrEmpty(settingsValue))
-				setting = false;
-			else
-				bool.TryParse(settingsValue, out setting);
-			
-			ShowRequiredQueryParamsInHeader = setting;
+
+			var settings = config.Settings.OfType<Configuration.SettingElement>().Select(s => s);
+
+			foreach (var settingElement in settings)
+			{
+				switch (settingElement.Name)
+				{
+					case "ShowRequiredQueryParamsInHeader" :
+						bool showQueryParamSetting;
+						bool.TryParse(settingElement.Value, out showQueryParamSetting);
+						ShowRequiredQueryParamsInHeader = showQueryParamSetting;
+						break;
+					case "MarkTaggedMethods" :
+						bool markTaggedMethods;
+						bool.TryParse(settingElement.Value, out markTaggedMethods);
+						MarkTagged = markTaggedMethods;
+						break;
+				}
+			}
 		}
 
 		/// <summary>
 		/// Unit test use only
 		/// </summary>
-		internal Mapper(IEnumerable<string> hiddenTags, bool showRequiredQueryParams)
+		internal Mapper(IEnumerable<string> hiddenTags, bool showRequiredQueryParams, bool markTagged)
 		{
 			HiddenTags = hiddenTags ?? new List<string>();
 			ShowRequiredQueryParamsInHeader = showRequiredQueryParams;
+			MarkTagged = markTagged;
 		}
 		
 		internal readonly IEnumerable<string> HiddenTags;
 		internal readonly bool ShowRequiredQueryParamsInHeader;
+		internal readonly bool MarkTagged;
 
 		/// <summary>
 		/// Find methods of the supplied type which have WebGet or WebInvoke attributes.
@@ -130,7 +140,8 @@ namespace Swaggerator
 				if (wg == null && wi == null) { continue; }
 
 				string httpMethod = (wi == null) ? "GET" : wi.Method;
-				string uriTemplate = (wi == null) ? wg.UriTemplate ?? "" : wi.UriTemplate ?? "";
+
+				string uriTemplate = (wi == null) ? wg.UriTemplate ?? ""  : wi.UriTemplate ?? "";
 
 				//implementation description overrides interface description
 				string description =
@@ -144,6 +155,8 @@ namespace Swaggerator
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(implementation, "Summary") ??
 				Helpers.GetCustomAttributeValue<string, OperationSummaryAttribute>(declaration, "Summary") ??
 				"";
+
+				summary += MarkTagged && methodTags.Any() ? "***" : string.Empty;
 
 				var returnType =
 					Helpers.GetCustomAttributeValue<Type, OverrideReturnTypeAttribute>(implementation, "Type") ??
@@ -176,8 +189,8 @@ namespace Swaggerator
 															 where !operation.errorResponses.Any(c => c.code.Equals(r.code))
 															 select r);
 
-                Uri uri = null;
-                Uri.TryCreate(new Uri("http://base"), uriTemplate, out uri);
+				Uri uri = null;
+				Uri.TryCreate(new Uri("http://base"), uriTemplate, out uri);
 
 				var pathToReturn = uri.LocalPath;
 
