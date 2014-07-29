@@ -32,126 +32,134 @@ using System.ServiceModel.Activation;
 
 namespace Swaggerator
 {
-	[AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
-	public class Discoverator : IDiscoverator
-	{
-		/// <summary>
-		/// Gets a new instance of the core Discoverator service
-		/// </summary>
-		public Discoverator()
-		{
-			string sectionName = "swagger";
-			var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection(sectionName) ?? new Configuration.SwaggerSection());
-			HiddenTags = config.Tags.OfType<Configuration.TagElement>().Where(t => t.Visibile.Equals(false)).Select(t => t.Name);
-			_Serializer = new Serializer(HiddenTags);
-		}
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class Discoverator : IDiscoverator
+    {
+        /// <summary>
+        /// Gets a new instance of the core Discoverator service
+        /// </summary>
+        public Discoverator()
+        {
+            string sectionName = "swagger";
+            var config = (Configuration.SwaggerSection)(System.Configuration.ConfigurationManager.GetSection(sectionName) ?? new Configuration.SwaggerSection());
+            HiddenTags = config.Tags.OfType<Configuration.TagElement>().Where(t => t.Visibile.Equals(false)).Select(t => t.Name);
+            _Serializer = new Serializer(HiddenTags);
+        }
 
-		internal Discoverator(IEnumerable<string> hiddenTags)
-		{
-			HiddenTags = hiddenTags;
-			_Serializer = new Serializer(HiddenTags);
-		}
+        internal Discoverator(IEnumerable<string> hiddenTags)
+        {
+            HiddenTags = hiddenTags;
+            _Serializer = new Serializer(HiddenTags);
+        }
 
-		internal readonly IEnumerable<string> HiddenTags;
-		private readonly Serializer _Serializer;
+        internal readonly IEnumerable<string> HiddenTags;
+        private readonly Serializer _Serializer;
 
-		public Stream GetServices()
-		{
-			return GetServices(AppDomain.CurrentDomain);
-		}
+        public Stream GetServices()
+        {
+            return GetServices(AppDomain.CurrentDomain);
+        }
 
-		public Stream GetServices(AppDomain searchDomain)
-		{
-			Models.ServiceList serviceList = new Models.ServiceList
-			{
-				swaggerVersion = Globals.SWAGGER_VERSION,
-				apiVersion = "No Swaggerized assemblies."
-			};
+        public Stream GetServices(AppDomain searchDomain)
+        {
+            var serviceList = new Swaggerator.Core.Models.Services.ServiceList
+            {
+                swaggerVersion = Globals.SWAGGER_VERSION,
+                apiVersion = "No Swaggerized assemblies."
+            };
 
-			Assembly[] searchAssemblies = searchDomain.GetAssemblies();
+            Assembly[] searchAssemblies = searchDomain.GetAssemblies();
 
-			bool foundAssembly = false;
-			foreach (Assembly assm in searchAssemblies)
-			{
-				IEnumerable<Models.Service> services = GetDiscoveratedServices(assm);
-				if (services.Any())
-				{
-					if (foundAssembly) { serviceList.apiVersion = "Multiple Assemblies"; }
-					else
-					{
-						foundAssembly = true;
-						serviceList.apiVersion = assm.GetName().Version.ToString();
-					}
-					serviceList.apis.AddRange(services);
-				}
-			}
+            bool foundAssembly = false;
+            foreach (Assembly assm in searchAssemblies)
+            {
+                IEnumerable<Models.Service> services = GetDiscoveratedServices(assm);
+                if (services.Any())
+                {
+                    if (foundAssembly) { serviceList.apiVersion = "Multiple Assemblies"; }
+                    else
+                    {
+                        foundAssembly = true;
+                        serviceList.apiVersion = assm.GetName().Version.ToString();
+                    }
+                    serviceList.apis.AddRange(
+                        from s in services
+                        select new Swaggerator.Core.Models.Services.Service
+                        {
+                            description = s.description,
+                            path = s.path
+                        });
+                }
+            }
 
-			MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(serviceList)));
+            var ser = new Swaggerator.Core.Serializer();
 
-			return stream;
-		}
+            MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(ser.SerializeServiceList(serviceList)));
 
-		private static IEnumerable<Models.Service> GetDiscoveratedServices(Assembly assembly)
-		{
-			IEnumerable<TypeInfo> types;
-			try
-			{
-				types = assembly.DefinedTypes;
-			}
-			catch (ReflectionTypeLoadException)
-			{
-				//couldn't load this assembly - probably a non-issue
-				yield break;
-			}
+            return stream;
+        }
 
-			foreach (TypeInfo ti in types)
-			{
-				SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
-				if (da != null)
-				{
-					DescriptionAttribute descAttr = ti.GetCustomAttribute<DescriptionAttribute>();
-					Models.Service service = new Models.Service
-					{
-						path = da.LocalPath,
-						description = (descAttr == null) ? da.Description : descAttr.Description
-					};
-					yield return service;
-				}
-			}
-		}
+        private static IEnumerable<Models.Service> GetDiscoveratedServices(Assembly assembly)
+        {
+            IEnumerable<TypeInfo> types;
+            try
+            {
+                types = assembly.DefinedTypes;
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                //couldn't load this assembly - probably a non-issue
+                yield break;
+            }
 
-		private static Type FindServiceTypeByPath(string servicePath)
-		{
-			Assembly[] allAssm = AppDomain.CurrentDomain.GetAssemblies();
-			foreach (Assembly assembly in allAssm)
-			{
-				foreach (TypeInfo ti in assembly.DefinedTypes)
-				{
-					SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
-					if (da != null && da.LocalPath == servicePath)
-					{
-						return ti.AsType();
-					}
-				}
-			}
-			return null;
-		}
+            foreach (TypeInfo ti in types)
+            {
+                SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
+                if (da != null)
+                {
+                    DescriptionAttribute descAttr = ti.GetCustomAttribute<DescriptionAttribute>();
+                    Models.Service service = new Models.Service
+                    {
+                        path = da.LocalPath,
+                        description = (descAttr == null) ? da.Description : descAttr.Description
+                    };
+                    yield return service;
+                }
+            }
+        }
 
-		public Stream GetServiceDetails(string servicePath)
-		{
-			return GetServiceDetails(AppDomain.CurrentDomain, HttpContext.Current.Request.Url, servicePath);
-		}
+        private static Type FindServiceTypeByPath(string servicePath)
+        {
+            Assembly[] allAssm = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assembly in allAssm)
+            {
+                foreach (TypeInfo ti in assembly.DefinedTypes)
+                {
+                    SwaggeratedAttribute da = ti.GetCustomAttribute<SwaggeratedAttribute>();
+                    if (da != null && da.LocalPath == servicePath)
+                    {
+                        return ti.AsType();
+                    }
+                }
+            }
+            return null;
+        }
 
-		public Stream GetServiceDetails(AppDomain domain, Uri baseUri, string servicePath)
-		{
-			Type serviceType = FindServiceTypeByPath(string.Format("/{0}", servicePath));
+        public Stream GetServiceDetails(string servicePath)
+        {
+            return GetServiceDetails(AppDomain.CurrentDomain, HttpContext.Current.Request.Url, servicePath);
+        }
 
-			Stack<Type> typeStack = new Stack<Type>();
+        public Stream GetServiceDetails(AppDomain domain, Uri baseUri, string servicePath)
+        {
+            Type serviceType = FindServiceTypeByPath(string.Format("/{0}", servicePath));
 
-			string api = _Serializer.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
+            Stack<Type> typeStack = new Stack<Type>();
 
-			MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
-			return ms;
-		}
-	}
+            string api = _Serializer.WriteApi(baseUri, string.Format("/{0}", servicePath), serviceType, typeStack);
+
+            MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(api));
+            return ms;
+        }
+    }
 }
