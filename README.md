@@ -50,7 +50,7 @@ If you want more finegrained control of display things, you can use the ```[Tag(
 Meanwhile on your dev server, you'd set the visible property of the "InternalUse" tag to true, or leave it out of the config entirely. Note this does not prevent users accessing those methods if they aren't properly secured - it only prevents documentation for them being generated.
 
 ### Optional Settings
-If you want to the method headers to show required query params, set "ShowRequiredQueryParamsInHeader" to true. If you want to show which methods are tagged, set "MarkTaggedMethods" to true.
+If you want to the method headers to show required query params, set "ShowRequiredQueryParamsInHeader" to true. If you want to show which methods are tagged, set "MarkTaggedMethods" to true (Swaggeratr will apend "***" at the end of summary text).
 
 ```
   <swagger>
