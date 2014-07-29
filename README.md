@@ -59,7 +59,7 @@ If you want to the method headers to show required query params, set "ShowRequir
     </tags>
     <settings>
       <setting name="ShowRequiredQueryParamsInHeader" value="true"/>
-			<setting name="MarkTaggedMethods" value="true"/>
+      <setting name="MarkTaggedMethods" value="true"/>
     </settings>
   </swagger>
 ```
