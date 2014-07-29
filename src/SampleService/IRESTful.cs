@@ -32,6 +32,7 @@ namespace SampleService
 		[WebGet(UriTemplate = "/Data/{value}")]
 		string GetData(string value);
 
+		[Tag("InternalUse")]
 		[OperationSummary("Does stuff.")]
 		[OperationNotes("I mean, it does some really interesting stuff. Stuff like you wouldn't believe.")]
 		[ResponseCode(400, "Four hundred error")]

@@ -77,15 +77,27 @@ namespace Swaggerator.Test
 		[TestMethod]
 		public void CanMapOperationUriWithRequiredParams()
 		{
-			var mapper = new Mapper(new List<string> { "SecretThings" }, true);
+			var mapper = new Mapper(new List<string> { "SecretThings" }, true, false);
 			
 			Assert.IsTrue(mapper.ShowRequiredQueryParamsInHeader);
 
 			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
 			var operations = mapper.GetOperations(map, new Stack<Type>());
 
-			Assert.AreEqual(6, operations.Count());
 			Assert.AreEqual("/method/test?uno={uno}&dos={dos}", operations.First().Item1);
+		}
+
+		[TestMethod]
+		public void CanMarkOperationSummaryIfTagged()
+		{
+			var mapper = new Mapper(null, false, true);
+			Assert.IsTrue(mapper.MarkTagged);
+
+			var map = typeof(MapTest).GetInterfaceMap(typeof(IMapTest));
+			var operations = mapper.GetOperations(map, new Stack<Type>());
+
+			var operation = operations.First(o => o.Item1.Equals("/keepitsecret")).Item2;
+			Assert.AreEqual("Secret method***", operation.summary);
 		}
 
 		[TestMethod]
@@ -266,6 +278,7 @@ namespace Swaggerator.Test
 			[ResponseCode(401, "Something weird happened")]
 			[ResponseCode(301, "Three O one Something weird happened")]
 			[Produces(ContentType = "application/xml")]
+			[OperationSummary("Secret method")]
 			[WebGet(UriTemplate = "/keepitsecret")]
 			int SecretMethod();
 
