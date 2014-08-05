@@ -14,28 +14,25 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * IDiscoverator.cs : Core service declaration.
  */
 
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Web;
+using System.IO;
 
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.WCF
 {
-	public class APIParameter
-	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
+    [ServiceContract]
+    interface IDiscoverator
+    {
+        [OperationContract]
+        [WebGet(UriTemplate = "", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+        Stream GetServices();
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
-	}
+        [OperationContract]
+        [WebGet(UriTemplate = "/{*service}", BodyStyle = WebMessageBodyStyle.Bare, ResponseFormat = WebMessageFormat.Json)]
+        Stream GetServiceDetails(string service);
+    }
 }

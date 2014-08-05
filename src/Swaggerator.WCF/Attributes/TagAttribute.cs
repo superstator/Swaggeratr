@@ -14,28 +14,25 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * TagAttribute.cs : Attribute to tag a method/model/property for configuration options.
+ * 
  */
 
+using System;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Attributes
 {
-	public class APIParameter
+	/// <summary>
+	/// Identifies a class/method/etc for swagger so that visibility can be controlled via configuration.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = true)]
+	public class TagAttribute : Attribute
 	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
+		public TagAttribute(string name)
+		{
+			TagName = name;
+		}
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
+		public string TagName { get; set; }
 	}
 }

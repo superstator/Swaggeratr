@@ -46,6 +46,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="ISerializer.cs" />
+    <Compile Include="Models\APIs\APITypeProperty.cs" />
+    <Compile Include="Serializers\APIErrorResponsesSerializer.cs" />
+    <Compile Include="Serializers\APIParametersListSerializer.cs" />
+    <Compile Include="Serializers\APIResourceListSerializer.cs" />
+    <Compile Include="Serializers\APISerializer.cs" />
+    <Compile Include="Serializers\APITypeListSerializer.cs" />
+    <Compile Include="Serializers\APITypePropertiesSerializer.cs" />
+    <Compile Include="Serializers\IAPIErrorResponsesListSerializer.cs" />
+    <Compile Include="Serializers\IAPIOperationsListSerializer.cs" />
+    <Compile Include="Serializers\IAPIParametersListSerializer.cs" />
+    <Compile Include="Serializers\IAPITypeListSerializer.cs" />
+    <Compile Include="Serializers\IAPIResourceListSerializer.cs" />
     <Compile Include="Models\APIs\API.cs" />
     <Compile Include="Models\APIs\APIResource.cs" />
     <Compile Include="Models\APIs\APIType.cs" />
@@ -56,6 +71,11 @@
     <Compile Include="Models\Services\ServiceList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="Serializers\IAPISerializer.cs" />
+    <Compile Include="Serializers\IAPITypePropertiesSerializer.cs" />
+    <Compile Include="Serializers\IServiceListSerializer.cs" />
+    <Compile Include="Serializers\APIOperationsListSerializer.cs" />
+    <Compile Include="Serializers\ServiceListSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

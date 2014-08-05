@@ -114,9 +114,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Swaggerator\Swaggerator.csproj">
-      <Project>{0ad6efbc-412f-4c0e-8e0a-0faf28151b55}</Project>
-      <Name>Swaggerator</Name>
+    <ProjectReference Include="..\Swaggerator.WCF\Swaggerator.WCF.csproj">
+      <Project>{1c54b143-04fa-429f-9064-b9f5d0ed4203}</Project>
+      <Name>Swaggerator.WCF</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

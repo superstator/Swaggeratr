@@ -22,13 +22,10 @@ using System.Runtime.Serialization;
 
 namespace Swaggerator.Core.Models.APIs
 {
-    [DataContract]
     public class APIResponseCode
     {
-        [DataMember]
         public int code { get; set; }
 
-        [DataMember]
         public string message { get; set; }
     }
 }

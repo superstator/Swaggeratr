@@ -14,28 +14,20 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * OperationSummaryAttribute.cs : Attribute to set the Summary property for a method.
  */
 
+using System;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Attributes
 {
-	public class APIParameter
-	{
-        public APIParameter()
+    public class OperationSummaryAttribute : Attribute
+    {
+        public OperationSummaryAttribute(string summary)
         {
-            allowableValues = new List<string>();
+            Summary = summary;
         }
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
-	}
+        public string Summary { get; set; }
+    }
 }

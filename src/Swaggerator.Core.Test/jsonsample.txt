@@ -1,0 +1,518 @@
+﻿{
+    "apiVersion": "1.0.0.0",
+    "swaggerVersion": "1.2",
+    "basePath": "http://localhost:12928",
+    "resourcePath": "/v1/rest",
+    "apis": [
+        {
+            "path": "/v1/rest/data",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "nickname": "GetDataUsingDataContractPOST",
+                    "type": "SampleService.CompositeType",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "description": null,
+                            "name": "composite",
+                            "type": "SampleService.CompositeType",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "Does stuff.***",
+                    "notes": "I mean, it does some really interesting stuff. Stuff like you wouldn't believe.",
+                    "errorResponses": [
+                        {
+                            "code": 200,
+                            "message": "OK"
+                        },
+                        {
+                            "code": 205,
+                            "message": "Some error"
+                        },
+                        {
+                            "code": 301,
+                            "message": "Three O one Something weird happened"
+                        },
+                        {
+                            "code": 400,
+                            "message": "Four hundred error"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Something weird happened"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Not found"
+                        }
+                    ],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/Data/{value}",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "GetDataGET",
+                    "type": "string",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "description": null,
+                            "name": "value",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/Data/{value}",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "DELETE",
+                    "nickname": "DeleteDELETE",
+                    "type": "None",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "description": null,
+                            "name": "value",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/Data/{value}?val={val}",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "PUT",
+                    "nickname": "PutDataPUT",
+                    "type": "string",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "description": null,
+                            "name": "value",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "query",
+                            "description": "Yes, you need to include this.",
+                            "name": "val",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "query",
+                            "description": null,
+                            "name": "option",
+                            "type": "integer(32)",
+                            "required": false,
+                            "allowMultiple": false
+                        },
+                        {
+                            "paramType": "body",
+                            "description": null,
+                            "name": "valueWithLengthRequirement",
+                            "type": "string(123)",
+                            "required": false,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/Data2/{value}",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "HideOneOfTwoParamsGET",
+                    "type": "integer(32)",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "description": null,
+                            "name": "value",
+                            "type": "integer(32)",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "Example for hiding a parameter",
+                    "notes": "The second parameter, object 'bar' is hidden",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/Data2Asynch/{value}",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "BeginServiceAsyncMethodGET",
+                    "type": "SampleService.CompositeType",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "description": null,
+                            "name": "value",
+                            "type": "string",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "Example for hiding parameters and overriding return type",
+                    "notes": "Two parameters, AsynchCallback callback and object asyncState are hidden",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/DisplayBaseClassProperties",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "nickname": "DisplayBaseClassPropertiesPOST",
+                    "type": "ModelSampleFurtherDerived",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "description": null,
+                            "name": "mySample",
+                            "type": "MySampleFirstDerived",
+                            "required": true,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/DisplayContractName",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "DisplayDataContractNameInsteadOfClassNameGET",
+                    "type": "MyDataContractName",
+                    "parameters": [],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/DisplayContractNameForRespAndReq",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "POST",
+                    "nickname": "DisplayContractNameForRespAndReqTestPOST",
+                    "type": "MyResonse",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "description": "Request object",
+                            "name": "req",
+                            "type": "MyDataContractName",
+                            "required": false,
+                            "allowMultiple": false
+                        }
+                    ],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/json",
+                        "application/xml"
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/v1/rest/List",
+            "description": null,
+            "operations": [
+                {
+                    "httpMethod": "GET",
+                    "nickname": "GetListGET",
+                    "type": "array",
+                    "items": {
+                        "$ref": "SampleService.CompositeType"
+                    },
+                    "parameters": [],
+                    "summary": "",
+                    "notes": "",
+                    "errorResponses": [],
+                    "accepts": [
+                        "application/json",
+                        "application/xml"
+                    ],
+                    "produces": [
+                        "application/customformat",
+                        "application/xml"
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "MySampleFirstDerived": {
+            "id": "MySampleFirstDerived",
+            "properties": {
+                "TestBaseString": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestBaseString2": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestDerivedString1": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestDerivedString2": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "ModelSampleFurtherDerived": {
+            "id": "ModelSampleFurtherDerived",
+            "properties": {
+                "TestBaseString": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestBaseString2": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestDerivedString1": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestDerivedString2": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestFurtherDerivedString1": {
+                    "type": "string",
+                    "required": true
+                },
+                "TestFurtherDerivedString2": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "MyRequest": {
+            "id": "MyRequest",
+            "properties": {
+                "MyRequesetMember": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "MyResonse": {
+            "id": "MyResonse",
+            "properties": {
+                "MyResponseMember": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "MyDataContractName": {
+            "id": "MyDataContractName",
+            "properties": {
+                "Foo": {
+                    "type": "string",
+                    "required": true
+                },
+                "Bar": {
+                    "type": "SubContractClassUserDefinedName",
+                    "required": true
+                }
+            }
+        },
+        "SubContractClassUserDefinedName": {
+            "id": "SubContractClassUserDefinedName",
+            "properties": {
+                "SubContractUserDefinedDataMemberName": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        },
+        "System.AsyncCallback": {
+            "id": "System.AsyncCallback",
+            "properties": {}
+        },
+        "System.Object": {
+            "id": "System.Object",
+            "properties": {}
+        },
+        "SampleService.CompositeType": {
+            "id": "SampleService.CompositeType",
+            "properties": {
+                "BoolValue": {
+                    "type": "boolean",
+                    "required": true,
+                    "description": "Whatever you do don't set this to"
+                },
+                "Secret": {
+                    "type": "SampleService.SecretObject",
+                    "required": true
+                },
+                "ArrayValue": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                        "$ref": "string"
+                    }
+                },
+                "EnumValue": {
+                    "type": "string",
+                    "required": false,
+                    "enum": [
+                        "Alpha",
+                        "Beta",
+                        "Gamma"
+                    ]
+                },
+                "ShortValue": {
+                    "type": "integer(16)",
+                    "required": true
+                },
+                "StringValueWithLengthRestriction": {
+                    "type": "string(10)",
+                    "required": true,
+                    "description": "Description text"
+                },
+                "SampleList": {
+                    "type": "array",
+                    "required": true,
+                    "description": "List description text",
+                    "items": {
+                        "$ref": "SubContractClassUserDefinedName"
+                    }
+                }
+            }
+        },
+        "SampleService.SecretObject": {
+            "id": "SampleService.SecretObject",
+            "properties": {
+                "SecretData": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        }
+    }
+}

@@ -14,28 +14,14 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * Globals.cs : Global constants
  */
 
-
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Core
 {
-	public class APIParameter
-	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
-
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
-	}
+    // Constants only!
+    public  static class Globals
+    {
+        public const string SWAGGER_VERSION = "1.2";
+    }
 }

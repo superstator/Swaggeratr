@@ -22,7 +22,6 @@ using System.Runtime.Serialization;
 
 namespace Swaggerator.Core.Models.APIs
 {
-    [DataContract]
     public class APIOperation
     {
         public APIOperation()
@@ -33,32 +32,15 @@ namespace Swaggerator.Core.Models.APIs
             produces = new List<string>();
         }
 
-        [DataMember]
         public string httpMethod { get; set; }
-        [DataMember]
         public string nickname { get; set; }
-        [DataMember]
         public string type { get; set; }
-        [DataMember(EmitDefaultValue = false)]
-        public OperationItems items { get; set; }
-        [DataMember]
+        public string itemsType { get; set; }
         public List<APIParameter> parameters { get; set; }
-        [DataMember]
         public string summary { get; set; }
-        [DataMember]
         public string notes { get; set; }
-        [DataMember]
         public List<APIResponseCode> errorResponses { get; set; }
-        [DataMember]
         public List<string> accepts { get; set; }
-        [DataMember]
         public List<string> produces { get; set; }
-    }
-
-    [DataContract]
-    public class OperationItems
-    {
-        [DataMember(Name = "$ref")]
-        public string Ref { get; set; }
     }
 }

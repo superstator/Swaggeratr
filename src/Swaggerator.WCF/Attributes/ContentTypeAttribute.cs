@@ -14,28 +14,15 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * ContentTypeAttribute.cs : Base class for Accepts/Produces attributes.
  */
 
+using System;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Attributes
 {
-	public class APIParameter
+	public abstract class ContentTypeAttribute : Attribute
 	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
-
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
+		public string ContentType { get; set; }
 	}
 }

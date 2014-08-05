@@ -14,28 +14,23 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * OperationReturnTypeAttribute.cs : Attribute that you can set to override the return type of an operation method
  */
 
+using System;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Attributes
 {
-	public class APIParameter
+	/// <summary>
+	/// Overriddes the retun type of an operation method. Useful for documenting asynchronous methods.
+	/// </summary>
+	public class OverrideReturnTypeAttribute : Attribute
 	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
+		public OverrideReturnTypeAttribute(Type type)
+		{
+			Type = type;
+		}
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
+		public Type Type { get; set; }
 	}
 }

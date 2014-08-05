@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swaggerator.Core", "Swagger
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swaggerator.Core.Test", "Swaggerator.Core.Test\Swaggerator.Core.Test.csproj", "{7D851C21-BEAD-4864-9211-C1FC1530B515}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Swaggerator.WCF", "Swaggerator.WCF\Swaggerator.WCF.csproj", "{1C54B143-04FA-429F-9064-B9F5D0ED4203}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{7D851C21-BEAD-4864-9211-C1FC1530B515}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D851C21-BEAD-4864-9211-C1FC1530B515}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D851C21-BEAD-4864-9211-C1FC1530B515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C54B143-04FA-429F-9064-B9F5D0ED4203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C54B143-04FA-429F-9064-B9F5D0ED4203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C54B143-04FA-429F-9064-B9F5D0ED4203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C54B143-04FA-429F-9064-B9F5D0ED4203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

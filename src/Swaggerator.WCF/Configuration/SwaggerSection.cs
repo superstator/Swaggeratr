@@ -14,28 +14,27 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * SwaggerSection.cs : Swaggerator configuration section model.
  */
 
+using System.Configuration;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Configuration
 {
-	public class APIParameter
+	public class SwaggerSection : ConfigurationSection
 	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
+		[ConfigurationProperty("tags", IsRequired = true)]
+		public TagCollection Tags
+		{
+			get { return (TagCollection)this["tags"]; }
+			set { this["tags"] = value; }
+		}
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
+		[ConfigurationProperty("settings", IsRequired = false)]
+		public SettingCollection Settings
+		{
+			get { return (SettingCollection) this["settings"]; }
+			set { this["settings"] = value; }
+		}
 	}
 }

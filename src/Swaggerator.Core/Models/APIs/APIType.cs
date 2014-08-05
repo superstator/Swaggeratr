@@ -8,5 +8,7 @@ namespace Swaggerator.Core.Models.APIs
 {
     public class APIType
     {
+        public string id;
+        public List<APITypeProperty> properties;
     }
 }

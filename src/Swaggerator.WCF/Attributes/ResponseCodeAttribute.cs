@@ -14,28 +14,24 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * ResponseCodeAttribute.cs : Attribute to document common method response codes.
  */
 
+using System;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Attributes
 {
-	public class APIParameter
-	{
-        public APIParameter()
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+    public class ResponseCodeAttribute : Attribute
+    {
+        public ResponseCodeAttribute(int code, string reason = "")
         {
-            allowableValues = new List<string>();
+            Code = code;
+            Description = reason;
         }
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
-	}
+        public int Code { get; set; }
+
+        public string Description { get; set; }
+    }
 }

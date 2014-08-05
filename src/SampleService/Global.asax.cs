@@ -34,7 +34,7 @@ namespace SampleService
 		protected void Application_Start(object sender, EventArgs e)
 		{
 			RouteTable.Routes.Add(new ServiceRoute("v1/rest", new WebServiceHostFactory(), typeof(RESTful)));
-			RouteTable.Routes.Add(new ServiceRoute("api-docs", new WebServiceHostFactory(), typeof(Swaggerator.Discoverator)));
+			RouteTable.Routes.Add(new ServiceRoute("api-docs", new WebServiceHostFactory(), typeof(Swaggerator.WCF.Discoverator)));
 		}
 
 		protected void Session_Start(object sender, EventArgs e)

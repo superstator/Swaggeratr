@@ -14,28 +14,27 @@
  * limitations under the License.
  * 
  * 
- * Parameter.cs : Parameter model for serialization.
+ * TagElement.cs : Swaggerator tag configuration element model.
  */
 
+using System.Configuration;
 
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-
-namespace Swaggerator.Core.Models.APIs
+namespace Swaggerator.Configuration
 {
-	public class APIParameter
+	public class TagElement : ConfigurationElement
 	{
-        public APIParameter()
-        {
-            allowableValues = new List<string>();
-        }
+		[ConfigurationProperty("name", IsRequired = true, IsKey = true)]
+		public string Name
+		{
+			get { return (string)this["name"]; }
+			set { this["name"] = value; }
+		}
 
-		public string paramType { get; set; }
-		public string description { get; set; }
-		public string name { get; set; }
-		public string type { get; set; }
-		public bool required { get; set; }
-		public List<string> allowableValues { get; set; }
-		public bool allowMultiple { get; set; }
+		[ConfigurationProperty("visible", DefaultValue = true, IsRequired = true)]
+		public bool Visibile
+		{
+			get { return (bool)this["visible"]; }
+			set { this["visible"] = value; }
+		}
 	}
 }

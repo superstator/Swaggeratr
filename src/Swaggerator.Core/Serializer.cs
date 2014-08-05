@@ -21,6 +21,7 @@
 using Newtonsoft.Json;
 using Swaggerator.Core.Models.APIs;
 using Swaggerator.Core.Models.Services;
+using Swaggerator.Core.Serializers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,17 +33,32 @@ using System.Text;
 
 namespace Swaggerator.Core
 {
-    public class Serializer
+    public class Serializer : Swaggerator.Core.ISerializer
     {
-        //private I
+        public Serializer() : this(new ServiceListSerializer(), new APISerializer()) { }
 
-        //public string SerializeAPI(API api)
-        //{
-        //}
+        public Serializer(IServiceListSerializer serviceListSerializer, IAPISerializer apiSerializer)
+        {
+            _ServiceListSerializer = serviceListSerializer;
+            _APISerializer = apiSerializer;
+        }
+
+        private IServiceListSerializer _ServiceListSerializer;
+        private IAPISerializer _APISerializer;
+
+        public string SerializeAPI(API api)
+        {
+            return _APISerializer.SerializeAPI(api);
+        }
 
         public string SerializeServiceList(ServiceList serviceList)
         {
-            return JsonConvert.SerializeObject(serviceList);
+            return _ServiceListSerializer.SerializeServiceList(serviceList);
+        }
+
+        public string SerializeAPIDetails(API api)
+        {
+            return _APISerializer.SerializeAPI(api);
         }
     }
 }
